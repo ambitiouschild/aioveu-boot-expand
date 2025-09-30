@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aioveu.boot.aioveuLaundryClothingType.mapper.AioveuLaundryClothingTypeMapper">
+
+    <!-- 获取衣物类型分页列表 -->
+    <select id="getAioveuLaundryClothingTypePage" resultType="com.aioveu.boot.aioveuLaundryClothingType.model.vo.AioveuLaundryClothingTypeVO">
+        SELECT
+                id,
+                type_code,
+                type_name,
+                category,
+                base_price,
+                processing_time,
+                special_requirements,
+                is_delicate,
+                status,
+                create_time,
+                update_time
+        FROM
+            aioveu_laundry_clothing_type
+        <where>
+            <if test="queryParams.id != null">
+                AND id LIKE CONCAT('%', #{queryParams.id}, '%')
+            </if>
+            <if test="queryParams.typeCode != null and queryParams.typeCode != ''">
+                AND type_code LIKE CONCAT('%', #{queryParams.typeCode}, '%')
+            </if>
+            <if test="queryParams.typeName != null and queryParams.typeName != ''">
+                AND type_name LIKE CONCAT('%', #{queryParams.typeName}, '%')
+            </if>
+            <if test="queryParams.category != null">
+                AND category LIKE CONCAT('%', #{queryParams.category}, '%')
+            </if>
+            <if test="queryParams.specialRequirements != null and queryParams.specialRequirements != ''">
+                AND special_requirements LIKE CONCAT('%', #{queryParams.specialRequirements}, '%')
+            </if>
+            <if test="queryParams.isDelicate != null">
+                AND is_delicate LIKE CONCAT('%', #{queryParams.isDelicate}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

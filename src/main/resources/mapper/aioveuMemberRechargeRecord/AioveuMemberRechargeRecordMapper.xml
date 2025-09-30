@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aioveu.boot.aioveuMemberRechargeRecord.mapper.AioveuMemberRechargeRecordMapper">
+
+    <!-- 获取会员充值记录分页列表 -->
+    <select id="getAioveuMemberRechargeRecordPage" resultType="com.aioveu.boot.aioveuMemberRechargeRecord.model.vo.AioveuMemberRechargeRecordVO">
+        SELECT
+                id,
+                recharge_no,
+                member_id,
+                amount,
+                gift_amount,
+                payment_type,
+                recharge_time,
+                operator_id,
+                status,
+                remark,
+                create_time,
+                update_time
+        FROM
+            aioveu_member_recharge_record
+        <where>
+            <if test="queryParams.id != null">
+                AND id LIKE CONCAT('%', #{queryParams.id}, '%')
+            </if>
+            <if test="queryParams.rechargeNo != null and queryParams.rechargeNo != ''">
+                AND recharge_no LIKE CONCAT('%', #{queryParams.rechargeNo}, '%')
+            </if>
+            <if test="queryParams.memberId != null">
+                AND member_id LIKE CONCAT('%', #{queryParams.memberId}, '%')
+            </if>
+            <if test="queryParams.paymentType != null">
+                AND payment_type LIKE CONCAT('%', #{queryParams.paymentType}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

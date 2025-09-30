@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/sql/mysql/5.独立会员系统设计（与客户解耦）/26aioveu_boot_20250926-2_add_aioveu_member_level.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/5.独立会员系统设计（与客户解耦）/27aioveu_boot_20250926-1_add_aioveu_member.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/5.独立会员系统设计（与客户解耦）/28aioveu_boot_20250926-3_add_aioveu_member_account.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/5.独立会员系统设计（与客户解耦）/29aioveu_boot_20250926-4_add_aioveu_member_recharge_record.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/6.洗衣业务独立系统/30aioveu_boot_20250926-5_add_aioveu_laundry_order.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/6.洗衣业务独立系统/31aioveu_boot_20250926-8_add_aioveu_laundry_clothing_type.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/6.洗衣业务独立系统/32aioveu_boot_20250926-6_add_aioveu_laundry_order_item.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/6.洗衣业务独立系统/32aioveu_boot_20250926-7_add_aioveu_laundry_process_image.sql" dialect="MySQL" />
+  </component>
+</project>

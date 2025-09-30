@@ -1,0 +1,1 @@
+import{a8 as e,a2 as n,X as r}from"./index-5U173LQ3.js";function o(){if(!e().userInfo){const e=n(),o=`/${e[e.length-1].route}`;return r({url:`/pages/login/index?redirect=${encodeURIComponent(o)}`}),!1}return!0}export{o as c};

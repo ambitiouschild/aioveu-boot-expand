@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aioveu.boot.aioveuMember.mapper.AioveuMemberMapper">
+
+    <!-- 获取会员信息管理分页列表 -->
+    <select id="getAioveuMemberPage" resultType="com.aioveu.boot.aioveuMember.model.vo.AioveuMemberVO">
+        SELECT
+                id,
+                member_no,
+                name,
+                phone,
+                id_card,
+                level_id,
+                join_date,
+                total_consumption,
+                last_visit,
+                status,
+                create_time,
+                update_time
+        FROM
+            aioveu_member
+        <where>
+            <if test="queryParams.id != null">
+                AND id LIKE CONCAT('%', #{queryParams.id}, '%')
+            </if>
+            <if test="queryParams.memberNo != null and queryParams.memberNo != ''">
+                AND member_no LIKE CONCAT('%', #{queryParams.memberNo}, '%')
+            </if>
+            <if test="queryParams.name != null and queryParams.name != ''">
+                AND name LIKE CONCAT('%', #{queryParams.name}, '%')
+            </if>
+            <if test="queryParams.phone != null and queryParams.phone != ''">
+                AND phone LIKE CONCAT('%', #{queryParams.phone}, '%')
+            </if>
+            <if test="queryParams.levelId != null">
+                AND level_id LIKE CONCAT('%', #{queryParams.levelId}, '%')
+            </if>
+            <if test="queryParams.status != null">
+                AND status LIKE CONCAT('%', #{queryParams.status}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aioveu.boot.aioveuLaundryProcessImage.mapper.AioveuLaundryProcessImageMapper">
+
+    <!-- 获取洗衣流程图片记录分页列表 -->
+    <select id="getAioveuLaundryProcessImagePage" resultType="com.aioveu.boot.aioveuLaundryProcessImage.model.vo.AioveuLaundryProcessImageVO">
+        SELECT
+                id,
+                order_id,
+                item_id,
+                image_type,
+                image_url,
+                upload_user,
+                description,
+                create_time,
+                update_time
+        FROM
+            aioveu_laundry_process_image
+        <where>
+            <if test="queryParams.id != null">
+                AND id LIKE CONCAT('%', #{queryParams.id}, '%')
+            </if>
+            <if test="queryParams.orderId != null">
+                AND order_id LIKE CONCAT('%', #{queryParams.orderId}, '%')
+            </if>
+            <if test="queryParams.itemId != null">
+                AND item_id LIKE CONCAT('%', #{queryParams.itemId}, '%')
+            </if>
+            <if test="queryParams.imageType != null">
+                AND image_type LIKE CONCAT('%', #{queryParams.imageType}, '%')
+            </if>
+            <if test="queryParams.uploadUser != null">
+                AND upload_user LIKE CONCAT('%', #{queryParams.uploadUser}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,1 @@
+import{aw as a}from"./index-5U173LQ3.js";const t="/api/v1/aioveu-outbound",e={getPage:e=>a({url:`${t}/page`,method:"GET",data:e}),getFormData:e=>a({url:`${t}/${e}/form`,method:"GET"}),add:e=>a({url:`${t}`,method:"POST",data:e}),update:(e,d)=>a({url:`${t}/${e}`,method:"PUT",data:d}),deleteByIds:e=>a({url:`${t}/${e}`,method:"DELETE"})};export{e as A};

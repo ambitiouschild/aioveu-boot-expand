@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aioveu.boot.aioveuLaundryOrderItem.mapper.AioveuLaundryOrderItemMapper">
+
+    <!-- 获取洗衣订单衣物明细分页列表 -->
+    <select id="getAioveuLaundryOrderItemPage" resultType="com.aioveu.boot.aioveuLaundryOrderItem.model.vo.AioveuLaundryOrderItemVO">
+        SELECT
+                id,
+                order_id,
+                clothing_type_id,
+                custom_type,
+                problem_desc,
+                price,
+                process_status,
+                special_instruction,
+                start_time,
+                end_time,
+                create_time,
+                update_time
+        FROM
+            aioveu_laundry_order_item
+        <where>
+            <if test="queryParams.id != null">
+                AND id LIKE CONCAT('%', #{queryParams.id}, '%')
+            </if>
+            <if test="queryParams.orderId != null">
+                AND order_id LIKE CONCAT('%', #{queryParams.orderId}, '%')
+            </if>
+            <if test="queryParams.clothingTypeId != null">
+                AND clothing_type_id LIKE CONCAT('%', #{queryParams.clothingTypeId}, '%')
+            </if>
+            <if test="queryParams.customType != null and queryParams.customType != ''">
+                AND custom_type LIKE CONCAT('%', #{queryParams.customType}, '%')
+            </if>
+            <if test="queryParams.processStatus != null">
+                AND process_status LIKE CONCAT('%', #{queryParams.processStatus}, '%')
+            </if>
+            <if test="queryParams.specialInstruction != null and queryParams.specialInstruction != ''">
+                AND special_instruction LIKE CONCAT('%', #{queryParams.specialInstruction}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,1 @@
+import{aE as n,j as a,aH as e,l as i,h as r}from"./index-5U173LQ3.js";function t(t){const l=n(t,null);if(l){const n=a(),{link:r,unlink:t,internalChildren:s}=l;r(n),e((()=>t(n)));return{parent:l,index:i((()=>s.indexOf(n)))}}return{parent:null,index:r(-1)}}export{t as u};

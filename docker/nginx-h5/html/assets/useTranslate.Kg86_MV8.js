@@ -1,0 +1,1 @@
+import{K as s,H as r,y as t}from"./wd-icon.CDbxLjoy.js";import{L as o}from"./index.BkHvPazf.js";const a=a=>{const n=a?s(a)+".":"";return{translate:(s,...a)=>{const e=o.messages(),m=r(e,n+s);return t(m)?m(...a):m}}};export{a as u};

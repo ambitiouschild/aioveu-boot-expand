@@ -1,0 +1,1 @@
+import{l as r}from"./index-5U173LQ3.js";import{u as o}from"./useParent.Bak0uCS8.js";import{C as e}from"./types.DZx-jF8C.js";function s(){const{parent:s,index:t}=o(e);return{border:r((()=>s&&s.props.border&&t.value))}}export{s as u};

@@ -1,0 +1,1 @@
+import{b as e,r,c as s}from"./wd-icon.CDbxLjoy.js";const t=Symbol("wd-form"),a={...s,model:r(Object),rules:{type:Object,default:()=>({})},resetOnChange:e(!0),errorType:{type:String,default:"message"}};export{t as F,a as f};

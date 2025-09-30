@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aioveu.boot.aioveuMemberLevel.mapper.AioveuMemberLevelMapper">
+
+    <!-- 获取会员等级分页列表 -->
+    <select id="getAioveuMemberLevelPage" resultType="com.aioveu.boot.aioveuMemberLevel.model.vo.AioveuMemberLevelVO">
+        SELECT
+                id,
+                level_name,
+                min_amount,
+                discount,
+                benefits,
+                status,
+                create_time,
+                update_time
+        FROM
+            aioveu_member_level
+        <where>
+            <if test="queryParams.id != null">
+                AND id LIKE CONCAT('%', #{queryParams.id}, '%')
+            </if>
+            <if test="queryParams.levelName != null and queryParams.levelName != ''">
+                AND level_name LIKE CONCAT('%', #{queryParams.levelName}, '%')
+            </if>
+            <if test="queryParams.status != null">
+                AND status LIKE CONCAT('%', #{queryParams.status}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

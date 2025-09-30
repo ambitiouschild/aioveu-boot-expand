@@ -1,0 +1,1 @@
+import"./index-5U173LQ3.js";const i="__QUEUE_KEY__";let o=[];function s(i){o.push(i)}function n(i){o=o.filter((o=>o.$.uid!==i.$.uid))}function t(i){o.forEach((o=>{o.$.uid!==i.$.uid&&o.$.exposed.close()}))}export{t as c,s as p,i as q,n as r};

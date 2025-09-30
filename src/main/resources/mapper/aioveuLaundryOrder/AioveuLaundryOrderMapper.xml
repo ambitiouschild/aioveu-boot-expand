@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aioveu.boot.aioveuLaundryOrder.mapper.AioveuLaundryOrderMapper">
+
+    <!-- 获取洗衣订单分页列表 -->
+    <select id="getAioveuLaundryOrderPage" resultType="com.aioveu.boot.aioveuLaundryOrder.model.vo.AioveuLaundryOrderVO">
+        SELECT
+                id,
+                order_no,
+                member_id,
+                customer_name,
+                customer_phone,
+                status,
+                total_amount,
+                discount_amount,
+                actual_amount,
+                payment_status,
+                payment_method_id,
+                create_time,
+                receive_time,
+                finish_time,
+                delivery_time,
+                update_time,
+                remark
+        FROM
+            aioveu_laundry_order
+        <where>
+            <if test="queryParams.id != null">
+                AND id LIKE CONCAT('%', #{queryParams.id}, '%')
+            </if>
+            <if test="queryParams.orderNo != null and queryParams.orderNo != ''">
+                AND order_no LIKE CONCAT('%', #{queryParams.orderNo}, '%')
+            </if>
+            <if test="queryParams.memberId != null">
+                AND member_id LIKE CONCAT('%', #{queryParams.memberId}, '%')
+            </if>
+            <if test="queryParams.customerName != null and queryParams.customerName != ''">
+                AND customer_name LIKE CONCAT('%', #{queryParams.customerName}, '%')
+            </if>
+            <if test="queryParams.status != null">
+                AND status LIKE CONCAT('%', #{queryParams.status}, '%')
+            </if>
+            <if test="queryParams.paymentStatus != null">
+                AND payment_status LIKE CONCAT('%', #{queryParams.paymentStatus}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>
