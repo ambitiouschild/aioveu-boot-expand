@@ -1,6 +1,10 @@
 package com.aioveu.boot.aioveuMemberLevel.service.impl;
 
+import com.aioveu.boot.aioveuCommon.util.NameMappingService.NameMappingService;
+import com.aioveu.boot.aioveuMember.model.entity.AioveuMember;
+import com.aioveu.boot.aioveuMemberLevel.model.vo.AioveuMemberLevelOptionsVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -15,6 +19,7 @@ import com.aioveu.boot.aioveuMemberLevel.converter.AioveuMemberLevelConverter;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.lang.Assert;
@@ -98,6 +103,88 @@ public class AioveuMemberLevelServiceImpl extends ServiceImpl<AioveuMemberLevelM
                 .map(Long::parseLong)
                 .toList();
         return this.removeByIds(idList);
+    }
+
+    /**
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter
+     */
+    @Override
+    public Map<Long, String> getMemberLevelMapByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Map.of();
+        }
+
+        // 批量查询信息
+//        List<AioveuMemberLevel> memberLevels = this.listByIds(ids);
+
+         //使用 LambdaQueryWrapper，编译时安全
+        List<AioveuMemberLevel> memberLevels = lambdaQuery()
+                .select(AioveuMemberLevel::getId, AioveuMemberLevel::getLevelName)
+                .in(AioveuMemberLevel::getId, ids)
+                .list();
+
+        // 转换为Map: key=ID, value=名称
+        return memberLevels.stream()
+                .collect(Collectors.toMap(
+                        AioveuMemberLevel::getId,
+                        AioveuMemberLevel::getLevelName
+                ));
+    }
+
+    /**
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter
+     */
+    @Override
+    public Map<Long, String> getMemberLevelMap() {
+        // 批量查询信息
+//        List<AioveuMemberLevel> memberLevels = this.list();
+
+        //使用 LambdaQueryWrapper，编译时安全
+        List<AioveuMemberLevel> memberLevels = lambdaQuery()
+                .select(AioveuMemberLevel::getId, AioveuMemberLevel::getLevelName)
+                .list();
+
+        // 转换为Map: key=ID, value=名称
+        return memberLevels.stream()
+                .collect(Collectors.toMap(
+                        AioveuMemberLevel::getId,
+                        AioveuMemberLevel::getLevelName
+                ));
+    }
+
+    /**
+     * 获取所有会员等级列表（用于下拉选择框） @AllArgsConstructor // 全参构造
+     *
+     * @return 部门选项列表
+     */
+    @Override
+    public List<AioveuMemberLevelOptionsVO> getAllMemberLevelsOptions() {
+        // 查询所有部门
+        List<AioveuMemberLevel> memberLevels = this.list();
+
+        // 转换为选项对象
+        List<AioveuMemberLevelOptionsVO>  memberLevelVO  = memberLevels.stream()
+                .map(memberLevel -> new AioveuMemberLevelOptionsVO(memberLevel.getId(), memberLevel.getLevelName()))
+                .collect(Collectors.toList());
+
+        return memberLevelVO;
+    }
+
+    /**
+     * 获取所有会员等级列表（用于下拉选择框） // 无参构造 使用 Setter 初始化（不修改 VO 类）
+     *
+     * @return 会员等级选项列表
+     */
+    @Override
+    public List<AioveuMemberLevelOptionsVO> getAllMemberLevelsOptions2() {
+        return this.list().stream()
+                .map(memberLevel -> {
+                    AioveuMemberLevelOptionsVO vo = new AioveuMemberLevelOptionsVO();
+                    vo.setId(memberLevel.getId());   //使用 Setter 初始化（不修改 VO 类）
+                    vo.setLevelName(memberLevel.getLevelName());  //使用 Setter 初始化（不修改 VO 类）
+                    return vo;
+                })
+                .collect(Collectors.toList());
     }
 
 }
