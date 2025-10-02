@@ -35,6 +35,10 @@ public class AioveuMemberVO implements Serializable {
     private String idCard;
     @Schema(description = "会员等级")
     private Long levelId;
+
+    @Schema(description = "会员等级名称")
+    private String levelName;
+
     @Schema(description = "入会时间")
     private LocalDateTime joinDate;
     @Schema(description = "累计消费金额")
