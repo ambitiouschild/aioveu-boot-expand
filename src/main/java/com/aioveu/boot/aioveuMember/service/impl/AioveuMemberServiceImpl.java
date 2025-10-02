@@ -19,6 +19,8 @@ import com.aioveu.boot.aioveuMember.converter.AioveuMemberConverter;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
@@ -121,6 +123,28 @@ public class AioveuMemberServiceImpl extends ServiceImpl<AioveuMemberMapper, Aio
                 .map(Long::parseLong)
                 .toList();
         return this.removeByIds(idList);
+    }
+
+    /**
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter  无参数
+     */
+    @Override
+    public Map<Long, String> getMemberNoMap() {
+
+        // 1.批量查询信息
+//        List<AioveuMemberLevel> memberLevels = this.list();
+
+        // 1.使用 LambdaQueryWrapper，编译时安全
+        List<AioveuMember> memberNos = lambdaQuery()
+                .select(AioveuMember::getId, AioveuMember::getMemberNo)
+                .list();
+
+        // 2.转换为Map: key=ID, value=名称
+        return memberNos.stream()
+                .collect(Collectors.toMap(
+                        AioveuMember::getId,
+                        AioveuMember::getMemberNo
+                ));
     }
 
 }

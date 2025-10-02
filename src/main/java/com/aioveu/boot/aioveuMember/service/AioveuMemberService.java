@@ -7,6 +7,8 @@ import com.aioveu.boot.aioveuMember.model.vo.AioveuMemberVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.Map;
+
 /**
  * 会员信息管理服务类
  *
@@ -54,5 +56,11 @@ public interface AioveuMemberService extends IService<AioveuMember> {
      * @return 是否删除成功
      */
     boolean deleteAioveuMembers(String ids);
+
+
+    /**
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter  // 无参，全查
+     */
+    Map<Long, String> getMemberNoMap();
 
 }
