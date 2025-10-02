@@ -58,6 +58,12 @@ public class NoGeneratorTest2 {
         // 3. 记录日志
         log.info("生成的新RechargeNo： "+ newNo);
 
+        // 生成单号
+        String no1 = noGenerator.generateAddRechargeNo();
+        String no2 = noGenerator.generateAddRechargeNo();
+        System.out.println("第一个单号: " + no1); // 紫罗兰20251003000001
+        System.out.println("第二个单号: " + no2); // 紫罗兰20251003000002
+
         // 4. 验证格式
         assert newNo.startsWith("紫罗兰") : "新增充值记录单号应以 紫罗兰 开头";
 //        assert newNo.length() == 16 : "充值单号长度应为 16 位";

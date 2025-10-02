@@ -4,6 +4,7 @@ import com.aioveu.boot.aioveuCommon.util.NumberGenerator.NoGenerator;
 import com.aioveu.boot.aioveuMemberAccount.model.entity.AioveuMemberAccount;
 import com.aioveu.boot.aioveuMemberAccount.service.AioveuMemberAccountService;
 import com.aioveu.boot.common.result.Result;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hpsf.Date;
@@ -91,18 +92,30 @@ public class AioveuMemberRechargeRecordServiceImpl extends ServiceImpl<AioveuMem
     @Override
     public boolean saveAioveuMemberRechargeRecord(AioveuMemberRechargeRecordForm formData) {
 
-        // 如果充值单号为空，则生成
-        if (StrUtil.isBlank(formData.getRechargeNo())) {
 
-            String newNo = noGenerator.generateAddRechargeNo();
-            formData.setRechargeNo(newNo);
-            log.info("生成的新RechargeNo: {}" +  noGenerator.generateRechargeNo());
-        }
+        log.info("原始RechargeNo：" +  formData.getRechargeNo());
 
         AioveuMemberRechargeRecord entity = aioveuMemberRechargeRecordConverter.toEntity(formData);
 
-        log.info("原始RechargeNo：" +  entity.getRechargeNo());
+        // 如果充值单号为空，则生成
+        if (StrUtil.isBlank(entity.getRechargeNo())) {
 
+            String newNo = noGenerator.generateAddRechargeNo();//单号生成器方法保持一致
+            entity.setRechargeNo(newNo);
+            log.info("生成的newNo: " +  newNo);
+        }
+
+        // 字段1：检查编号是否唯一（对于不依赖外键的字段，不可重复）
+        LambdaQueryWrapper<AioveuMemberRechargeRecord> wrapper = new LambdaQueryWrapper<>();
+        // 正确调用：传递 formData 参数
+        wrapper.eq(AioveuMemberRechargeRecord::getRechargeNo, entity.getRechargeNo());
+
+        if (this.count(wrapper) > 0) {
+            // 重新生成单号
+            String againNo = noGenerator.generateAddRechargeNo();//单号生成器方法保持一致
+            entity.setRechargeNo(againNo);
+            log.info("生成的againNo: " +  againNo);
+        }
 
         return this.save(entity);
     }
@@ -145,9 +158,21 @@ public class AioveuMemberRechargeRecordServiceImpl extends ServiceImpl<AioveuMem
             //实例化
 //            NoGenerator noGenerator = new NoGenerator();
 
-            String newNo = noGenerator.generateRechargeNo();
+            String newNo = noGenerator.generateRechargeNo();//单号生成器方法保持一致
             entity.setRechargeNo(newNo);
-            log.info("生成的新RechargeNo: {}" +  noGenerator.generateRechargeNo());
+            log.info("生成的新RechargeNo" + newNo);
+        }
+
+        // 字段1：检查编号是否唯一（对于不依赖外键的字段，不可重复）
+        LambdaQueryWrapper<AioveuMemberRechargeRecord> wrapper = new LambdaQueryWrapper<>();
+        // 正确调用：传递 formData 参数
+        wrapper.eq(AioveuMemberRechargeRecord::getRechargeNo, entity.getRechargeNo());
+
+        if (this.count(wrapper) > 0) {
+            // 重新生成单号
+            String againNo = noGenerator.generateRechargeNo();//单号生成器方法保持一致
+            entity.setRechargeNo(againNo);
+            log.info("生成的againNo: " +  againNo);
         }
 
         // 保存实体

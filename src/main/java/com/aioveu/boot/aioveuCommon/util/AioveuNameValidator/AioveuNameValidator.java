@@ -139,8 +139,20 @@ public class AioveuNameValidator {
  * @LastEditTime: 2025-08-30 03:18:20
  *
  *
+ *
+ *
 
-        EmployeeNameValidator.notNull(
+ *         AioveuNameValidator.validateEntityUnique(
+                formData,
+                AioveuWarehouseForm::getManagerName,  // 获取姓名的方法
+                AioveuEmployee::getName,  // 实体字段：员工姓名
+//              null,
+                AioveuWarehouseForm::setManagerId, // 直接使用方法引用
+                aioveuEmployeeService,  // 员工服务（不是this）
+                "经理"  // 实体名称（用于错误消息）
+        );
+
+        AioveuNameValidator.validateEntityExists(
                 formData,
                 AioveuWarehouseForm::getManagerName,  // 获取经理姓名的方法
                 AioveuEmployee::getName,  // 实体字段：员工姓名
@@ -150,5 +162,6 @@ public class AioveuNameValidator {
                 aioveuEmployeeService,  // 员工服务（不是this）
                 "经理"  // 实体名称（用于错误消息）
         );
+
 
 */
