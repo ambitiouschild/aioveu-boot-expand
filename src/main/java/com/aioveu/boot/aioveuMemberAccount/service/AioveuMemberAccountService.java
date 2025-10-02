@@ -7,6 +7,8 @@ import com.aioveu.boot.aioveuMemberAccount.model.vo.AioveuMemberAccountVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.math.BigDecimal;
+
 /**
  * 会员充值账户服务类
  *
@@ -38,6 +40,23 @@ public interface AioveuMemberAccountService extends IService<AioveuMemberAccount
      */
     boolean saveAioveuMemberAccount(AioveuMemberAccountForm formData);
 
+
+    /**
+     * 根据会员ID获取账户
+     *
+     * @param memberId 会员ID
+     * @return 会员账户
+     */
+    AioveuMemberAccount getAccountByMemberId(Long memberId);
+
+    /**
+     * 获取或创建会员账户
+     *
+     * @param memberId 会员ID
+     * @return 会员账户
+     */
+    AioveuMemberAccount getOrCreateAccount(Long memberId);
+
     /**
      * 修改会员充值账户
      *
@@ -46,6 +65,16 @@ public interface AioveuMemberAccountService extends IService<AioveuMemberAccount
      * @return 是否修改成功
      */
     boolean updateAioveuMemberAccount(Long id, AioveuMemberAccountForm formData);
+
+    /**
+     * 充值成功后更新账户
+     * @param account   会员充值账户ID
+     * @param amount    充值金额
+     * @param giftAmount    赠送金额
+     * @return 是否修改成功
+     */
+    boolean updateAccountAfterRecharge(AioveuMemberAccount account, BigDecimal amount,BigDecimal giftAmount);
+
 
     /**
      * 删除会员充值账户

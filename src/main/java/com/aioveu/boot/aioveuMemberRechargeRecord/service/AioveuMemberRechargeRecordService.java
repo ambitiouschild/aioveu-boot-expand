@@ -38,6 +38,15 @@ public interface AioveuMemberRechargeRecordService extends IService<AioveuMember
      */
     boolean saveAioveuMemberRechargeRecord(AioveuMemberRechargeRecordForm formData);
 
+
+    /**
+     * 新增会员充值记录并执行充值操作
+     *
+     * @param formData 会员充值记录表单对象
+     * @return 是否新增成功并充值成功
+     */
+    boolean saveAioveuMemberRechargeRecordandexecuteRecharge(AioveuMemberRechargeRecordForm formData);
+
     /**
      * 修改会员充值记录
      *

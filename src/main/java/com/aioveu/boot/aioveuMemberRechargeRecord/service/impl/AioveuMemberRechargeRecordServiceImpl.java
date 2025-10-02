@@ -1,6 +1,10 @@
 package com.aioveu.boot.aioveuMemberRechargeRecord.service.impl;
 
+import com.aioveu.boot.aioveuMemberAccount.model.entity.AioveuMemberAccount;
+import com.aioveu.boot.aioveuMemberAccount.service.AioveuMemberAccountService;
+import com.aioveu.boot.common.result.Result;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,12 +17,14 @@ import com.aioveu.boot.aioveuMemberRechargeRecord.model.query.AioveuMemberRechar
 import com.aioveu.boot.aioveuMemberRechargeRecord.model.vo.AioveuMemberRechargeRecordVO;
 import com.aioveu.boot.aioveuMemberRechargeRecord.converter.AioveuMemberRechargeRecordConverter;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 会员充值记录服务实现类
@@ -31,6 +37,9 @@ import cn.hutool.core.util.StrUtil;
 public class AioveuMemberRechargeRecordServiceImpl extends ServiceImpl<AioveuMemberRechargeRecordMapper, AioveuMemberRechargeRecord> implements AioveuMemberRechargeRecordService {
 
     private final AioveuMemberRechargeRecordConverter aioveuMemberRechargeRecordConverter;
+
+    @Autowired
+    private AioveuMemberAccountService aioveuMemberAccountService;
 
     /**
     * 获取会员充值记录分页列表
@@ -70,7 +79,126 @@ public class AioveuMemberRechargeRecordServiceImpl extends ServiceImpl<AioveuMem
         AioveuMemberRechargeRecord entity = aioveuMemberRechargeRecordConverter.toEntity(formData);
         return this.save(entity);
     }
-    
+
+
+    //--------------------------------------------------------------
+    /**
+     * 新增会员充值记录并执行充值操作
+     *
+     * @param formData 会员充值记录表单对象
+     * @return 是否新增成功并充值成功
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    //方法返回值变更
+    //从 boolean改为 RechargeResult
+    //返回包含充值结果的详细对象
+    public boolean saveAioveuMemberRechargeRecordandexecuteRecharge(AioveuMemberRechargeRecordForm formData) {
+        // 1. 验证表单数据
+        validateFormData(formData);
+
+        // 2. 转换表单数据为实体
+        AioveuMemberRechargeRecord entity = aioveuMemberRechargeRecordConverter.toEntity(formData);
+
+//        // 3. 设置充值记录状态为处理中
+//        entity.setStatus(RechargeStatus.PROCESSING.getValue());
+
+//        // 4. 生成交易流水号
+//        if (StrUtil.isBlank(entity.getTransactionNo())) {
+//            entity.setTransactionNo(generateTransactionNo());
+//        }
+
+//        // 5. 保存充值记录
+//        boolean saveSuccess = this.save(entity);
+//        if (!saveSuccess) {
+//            return new Result(false, "保存充值记录失败", BigDecimal.ZERO);
+//        }
+
+        // 6. 执行充值操作
+        return executeRecharge(entity);
+    }
+
+    /**
+     * 验证表单数据
+     */
+    private void validateFormData(AioveuMemberRechargeRecordForm formData) {
+        Assert.notNull(formData, "表单数据不能为空");
+        Assert.notNull(formData.getMemberId(), "会员ID不能为空");
+        Assert.notNull(formData.getAmount(), "充值金额不能为空");
+        Assert.isTrue(formData.getAmount().compareTo(BigDecimal.ZERO) > 0, "充值金额必须大于0");
+        Assert.notNull(formData.getPaymentType(), "支付方式不能为空");
+    }
+
+//    /**
+//     * 生成交易流水号
+//     */
+//    private String generateTransactionNo() {
+//        return "TR" + System.currentTimeMillis() + UUID.randomUUID().toString().replace("-", "").substring(0, 6);
+//    }
+
+    /**
+     * 执行充值操作
+     */
+    private boolean executeRecharge(AioveuMemberRechargeRecord record) {
+//        try {
+            // 1. 获取或创建会员账户
+            AioveuMemberAccount account = aioveuMemberAccountService.getOrCreateAccount(record.getMemberId());
+
+//            // 2. 调用支付网关
+//            boolean paymentSuccess = callPaymentGateway(record.getAmount(),
+//                    PaymentType.valueOf(record.getPaymentType()),
+//                    record.getTransactionNo());
+
+              Boolean result = aioveuMemberAccountService.updateAccountAfterRecharge(account, record.getAmount(),record.getGiftAmount());
+
+//            if (paymentSuccess) {
+//                // 3. 支付成功，更新账户和记录
+//                updateAccountAfterRecharge(account, record.getAmount());
+//                updateRechargeRecordStatus(record, RechargeStatus.SUCCESS, "支付成功");
+//
+//                return new RechargeResult(true, "充值成功", account.getBalance());
+//            } else {
+//                // 4. 支付失败
+//                updateRechargeRecordStatus(record, RechargeStatus.FAILED, "支付失败");
+//
+//                return new RechargeResult(false, "支付失败", account.getBalance());
+//            }
+//        } catch (Exception e) {
+//            // 5. 处理异常
+//            updateRechargeRecordStatus(record, RechargeStatus.FAILED, "系统错误: " + e.getMessage());
+//            throw new RechargeException("充值过程中发生错误", e);
+//        }
+        return result;
+    }
+
+
+
+//    /**
+//     * 模拟支付网关调用
+//     */
+//    private boolean callPaymentGateway(BigDecimal amount, PaymentType paymentType, String transactionNo) {
+//        // 实际项目中这里会调用第三方支付接口
+//        // 模拟支付成功
+//        log.info("调用支付网关: 金额={}, 方式={}, 流水号={}", amount, paymentType, transactionNo);
+//        return true; // 模拟总是成功
+//    }
+
+
+
+//    /**
+//     * 更新充值记录状态
+//     */
+//    private void updateRechargeRecordStatus(AioveuMemberRechargeRecord record, RechargeStatus status, String remark) {
+//        record.setStatus(status.getValue());
+//        record.setRemark(remark);
+//        this.updateById(record);
+//    }
+
+
+
+
+
+
     /**
      * 更新会员充值记录
      *

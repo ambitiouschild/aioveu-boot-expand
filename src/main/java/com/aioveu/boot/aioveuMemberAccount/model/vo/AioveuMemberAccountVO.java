@@ -27,6 +27,11 @@ public class AioveuMemberAccountVO implements Serializable {
     private Long id;
     @Schema(description = "会员ID")
     private Long memberId;
+
+    @Schema(description = "会员卡号")
+    private String memberNo;
+
+
     @Schema(description = "现金余额")
     private BigDecimal cashBalance;
     @Schema(description = "赠送余额")

@@ -48,6 +48,21 @@ public class AioveuMemberRechargeRecordController  {
         return Result.judge(result);
     }
 
+
+    @Operation(summary = "新增会员充值记录执行充值")
+    @PostMapping
+    @PreAuthorize("@ss.hasPerm('aioveuMemberRechargeRecord:aioveu-member-recharge-record:recharge')")
+    public Result<Void> saveAioveuMemberRechargeRecordandexecuteRecharge(@RequestBody AioveuMemberRechargeRecordForm formData) {
+        try {
+            boolean result = aioveuMemberRechargeRecordService.saveAioveuMemberRechargeRecordandexecuteRecharge(formData);
+            return Result.judge(result);
+        } catch (Exception e) {
+            return Result.failed();
+        }
+    }
+
+
+
     @Operation(summary = "获取会员充值记录表单数据")
     @GetMapping("/{id}/form")
     @PreAuthorize("@ss.hasPerm('aioveuMemberRechargeRecord:aioveu-member-recharge-record:edit')")
