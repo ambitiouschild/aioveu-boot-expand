@@ -62,29 +62,26 @@ public interface AioveuMemberLevelService extends IService<AioveuMemberLevel> {
     boolean deleteAioveuMemberLevels(String ids);
 
     /**
-     * 批量获取映射信息（新增方法）用于AioveuNameSetter
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter  // 有参构造，实体类id
+     * @param ids
      */
 
     Map<Long, String> getMemberLevelMapByIds(List<Long> ids);
 
     /**
-     * 批量获取映射信息（新增方法）用于AioveuNameSetter
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter  // 无参，全查
      */
 
     Map<Long, String> getMemberLevelMap();
 
 
     /**
-     * 获取所有会员等级列表（用于下拉选择框） @AllArgsConstructor // 全参构造
-     *
-     * @return 会员等级选项列表
+     * 获取所有会员等级列表（用于下拉选择框） @AllArgsConstructor // 全参构造 AioveuVO(id, name)
      */
     List<AioveuMemberLevelOptionsVO> getAllMemberLevelsOptions();
 
     /**
-     * 获取所有会员等级列表（用于下拉选择框） // 无参构造 使用 Setter 初始化（不修改 VO 类）
-     *
-     * @return 会员等级选项列表
+     * 获取所有会员等级列表（用于下拉选择框） // 无参构造 使用 Setter 初始化（不修改 VO 类）vo.setId，vo.setName
      */
     List<AioveuMemberLevelOptionsVO> getAllMemberLevelsOptions2();
 

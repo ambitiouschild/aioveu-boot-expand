@@ -106,7 +106,7 @@ public class AioveuMemberLevelServiceImpl extends ServiceImpl<AioveuMemberLevelM
     }
 
     /**
-     * 批量获取映射信息（新增方法）用于AioveuNameSetter
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter 有参构造，实体类id
      */
     @Override
     public Map<Long, String> getMemberLevelMapByIds(List<Long> ids) {
@@ -114,16 +114,16 @@ public class AioveuMemberLevelServiceImpl extends ServiceImpl<AioveuMemberLevelM
             return Map.of();
         }
 
-        // 批量查询信息
+        // 1.批量查询信息
 //        List<AioveuMemberLevel> memberLevels = this.listByIds(ids);
 
-         //使用 LambdaQueryWrapper，编译时安全
+         // 1.使用 LambdaQueryWrapper，编译时安全
         List<AioveuMemberLevel> memberLevels = lambdaQuery()
                 .select(AioveuMemberLevel::getId, AioveuMemberLevel::getLevelName)
                 .in(AioveuMemberLevel::getId, ids)
                 .list();
 
-        // 转换为Map: key=ID, value=名称
+        // 2.转换为Map: key=ID, value=名称
         return memberLevels.stream()
                 .collect(Collectors.toMap(
                         AioveuMemberLevel::getId,
@@ -132,19 +132,19 @@ public class AioveuMemberLevelServiceImpl extends ServiceImpl<AioveuMemberLevelM
     }
 
     /**
-     * 批量获取映射信息（新增方法）用于AioveuNameSetter
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter 无参数
      */
     @Override
     public Map<Long, String> getMemberLevelMap() {
-        // 批量查询信息
+        // 1.批量查询信息
 //        List<AioveuMemberLevel> memberLevels = this.list();
 
-        //使用 LambdaQueryWrapper，编译时安全
+        // 1.使用 LambdaQueryWrapper，编译时安全
         List<AioveuMemberLevel> memberLevels = lambdaQuery()
                 .select(AioveuMemberLevel::getId, AioveuMemberLevel::getLevelName)
                 .list();
 
-        // 转换为Map: key=ID, value=名称
+        // 2.转换为Map: key=ID, value=名称
         return memberLevels.stream()
                 .collect(Collectors.toMap(
                         AioveuMemberLevel::getId,
@@ -159,10 +159,16 @@ public class AioveuMemberLevelServiceImpl extends ServiceImpl<AioveuMemberLevelM
      */
     @Override
     public List<AioveuMemberLevelOptionsVO> getAllMemberLevelsOptions() {
-        // 查询所有部门
-        List<AioveuMemberLevel> memberLevels = this.list();
+//        // 1.查询所有部门
+//        List<AioveuMemberLevel> memberLevels = this.list();
 
-        // 转换为选项对象
+        // 1.使用 LambdaQueryWrapper，编译时安全
+        List<AioveuMemberLevel> memberLevels = lambdaQuery()
+                .select(AioveuMemberLevel::getId, AioveuMemberLevel::getLevelName)
+                .list();
+
+
+        // 2.转换为选项对象
         List<AioveuMemberLevelOptionsVO>  memberLevelVO  = memberLevels.stream()
                 .map(memberLevel -> new AioveuMemberLevelOptionsVO(memberLevel.getId(), memberLevel.getLevelName()))
                 .collect(Collectors.toList());
