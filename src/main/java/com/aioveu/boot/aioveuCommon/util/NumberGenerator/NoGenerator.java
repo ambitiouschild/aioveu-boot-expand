@@ -75,7 +75,7 @@ public class NoGenerator {
      * 格式：TR + yyyyMMdd + 6位序列号
      * 示例：TR20251003000001
      */
-    public String generateaddRechargeNo() {
+    public String generateAddRechargeNo() {
         // 获取当前日期字符串
         String dateStr = new SimpleDateFormat("yyyyMMdd").format(new Date());
         // 获取或创建序列号计数器

@@ -47,6 +47,28 @@ public class NoGeneratorTest2 {
         System.out.println("生成的充值单号: " + newNo);
     }
 
+    @Test
+    public void testGenerateAddRechargeNo() {
+        // 1. 创建实例
+        NoGenerator noGenerator = new NoGenerator();
+
+        // 2. 生成充值单号
+        String newNo = noGenerator.generateAddRechargeNo();
+
+        // 3. 记录日志
+        log.info("生成的新RechargeNo： "+ newNo);
+
+        // 4. 验证格式
+        assert newNo.startsWith("紫罗兰") : "新增充值记录单号应以 紫罗兰 开头";
+//        assert newNo.length() == 16 : "充值单号长度应为 16 位";
+//        assert newNo.matches("TR\\d{14}") : "充值单号格式应为 TR + 8位日期 + 6位序列号";
+
+        System.out.println("新增充值记录单号: " + newNo);
+    }
+
+
+
+
 
     @Test
     //添加测试重置功能
