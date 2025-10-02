@@ -29,7 +29,7 @@ public class AioveuMemberRechargeRecordForm implements Serializable {
 
 
     @Schema(description = "充值单号")
-    @NotBlank(message = "充值单号不能为空")
+//    @NotBlank(message = "充值单号不能为空")
     @Size(max=30, message="充值单号长度不能超过30个字符")
     private String rechargeNo;
 

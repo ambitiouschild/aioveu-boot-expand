@@ -1,10 +1,14 @@
 package com.aioveu.boot.aioveuMemberRechargeRecord.service.impl;
 
+import com.aioveu.boot.aioveuCommon.util.NumberGenerator.NoGenerator;
 import com.aioveu.boot.aioveuMemberAccount.model.entity.AioveuMemberAccount;
 import com.aioveu.boot.aioveuMemberAccount.service.AioveuMemberAccountService;
 import com.aioveu.boot.common.result.Result;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hpsf.Date;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -18,8 +22,13 @@ import com.aioveu.boot.aioveuMemberRechargeRecord.model.vo.AioveuMemberRechargeR
 import com.aioveu.boot.aioveuMemberRechargeRecord.converter.AioveuMemberRechargeRecordConverter;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.lang.Assert;
@@ -32,11 +41,16 @@ import org.springframework.transaction.annotation.Transactional;
  * @author 可我不敌可爱
  * @since 2025-09-30 17:08
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AioveuMemberRechargeRecordServiceImpl extends ServiceImpl<AioveuMemberRechargeRecordMapper, AioveuMemberRechargeRecord> implements AioveuMemberRechargeRecordService {
 
     private final AioveuMemberRechargeRecordConverter aioveuMemberRechargeRecordConverter;
+
+    // 通过依赖注入获取NoGenerator
+    @Autowired
+    private NoGenerator noGenerator;
 
     @Autowired
     private AioveuMemberAccountService aioveuMemberAccountService;
@@ -76,7 +90,20 @@ public class AioveuMemberRechargeRecordServiceImpl extends ServiceImpl<AioveuMem
      */
     @Override
     public boolean saveAioveuMemberRechargeRecord(AioveuMemberRechargeRecordForm formData) {
+
+        // 如果充值单号为空，则生成
+        if (StrUtil.isBlank(formData.getRechargeNo())) {
+
+            String newNo = noGenerator.generateAddRechargeNo();
+            formData.setRechargeNo(newNo);
+            log.info("生成的新RechargeNo: {}" +  noGenerator.generateRechargeNo());
+        }
+
         AioveuMemberRechargeRecord entity = aioveuMemberRechargeRecordConverter.toEntity(formData);
+
+        log.info("原始RechargeNo：" +  entity.getRechargeNo());
+
+
         return this.save(entity);
     }
 
@@ -94,11 +121,14 @@ public class AioveuMemberRechargeRecordServiceImpl extends ServiceImpl<AioveuMem
     //从 boolean改为 RechargeResult
     //返回包含充值结果的详细对象
     public boolean saveAioveuMemberRechargeRecordandexecuteRecharge(AioveuMemberRechargeRecordForm formData) {
+
+
         // 1. 验证表单数据
-        validateFormData(formData);
+        validateFormData(formData);//在服务方法中，如果仍然需要验证
 
         // 2. 转换表单数据为实体
         AioveuMemberRechargeRecord entity = aioveuMemberRechargeRecordConverter.toEntity(formData);
+
 
 //        // 3. 设置充值记录状态为处理中
 //        entity.setStatus(RechargeStatus.PROCESSING.getValue());
@@ -107,6 +137,21 @@ public class AioveuMemberRechargeRecordServiceImpl extends ServiceImpl<AioveuMem
 //        if (StrUtil.isBlank(entity.getTransactionNo())) {
 //            entity.setTransactionNo(generateTransactionNo());
 //        }
+
+        log.info("原始RechargeNo：" +  entity.getRechargeNo());
+         // 4. 如果充值单号为空，则生成
+        if (StrUtil.isBlank(entity.getRechargeNo())) {
+
+            //实例化
+//            NoGenerator noGenerator = new NoGenerator();
+
+            String newNo = noGenerator.generateRechargeNo();
+            entity.setRechargeNo(newNo);
+            log.info("生成的新RechargeNo: {}" +  noGenerator.generateRechargeNo());
+        }
+
+        // 保存实体
+        this.save(entity);
 
 //        // 5. 保存充值记录
 //        boolean saveSuccess = this.save(entity);
@@ -129,12 +174,11 @@ public class AioveuMemberRechargeRecordServiceImpl extends ServiceImpl<AioveuMem
         Assert.notNull(formData.getPaymentType(), "支付方式不能为空");
     }
 
-//    /**
-//     * 生成交易流水号
-//     */
-//    private String generateTransactionNo() {
-//        return "TR" + System.currentTimeMillis() + UUID.randomUUID().toString().replace("-", "").substring(0, 6);
-//    }
+
+
+
+
+
 
     /**
      * 执行充值操作

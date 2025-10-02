@@ -43,6 +43,7 @@ public class AioveuMemberRechargeRecordController  {
     @Operation(summary = "新增会员充值记录")
     @PostMapping
     @PreAuthorize("@ss.hasPerm('aioveuMemberRechargeRecord:aioveu-member-recharge-record:add')")
+    //在控制器中，使用@Valid注解触发校验。
     public Result<Void> saveAioveuMemberRechargeRecord(@RequestBody @Valid AioveuMemberRechargeRecordForm formData ) {
         boolean result = aioveuMemberRechargeRecordService.saveAioveuMemberRechargeRecord(formData);
         return Result.judge(result);
@@ -50,9 +51,14 @@ public class AioveuMemberRechargeRecordController  {
 
 
     @Operation(summary = "新增会员充值记录执行充值")
-    @PostMapping
+    @PostMapping("/execute") // 修改为不同的路径
+    //会员充值通常不用"recharge"这个词，更倾向于使用"add credit"或"renew membership"。
+    //add credit‌：直接为账户增加余额，适用于手机话费、会员服务等场景。
+    //renew membership‌：侧重会员资格的续订，常见于订阅服务。
+    //recharge"主要用于设备充电
+    //在会员体系中，若涉及设备租赁或实体卡充值，可能会使用"recharge card"，但日常会员服务充值更倾向用"add credit"或"renew membership"。
     @PreAuthorize("@ss.hasPerm('aioveuMemberRechargeRecord:aioveu-member-recharge-record:recharge')")
-    public Result<Void> saveAioveuMemberRechargeRecordandexecuteRecharge(@RequestBody AioveuMemberRechargeRecordForm formData) {
+    public Result<Void> saveAioveuMemberRechargeRecordandexecuteRecharge(@RequestBody  @Valid AioveuMemberRechargeRecordForm formData) {
         try {
             boolean result = aioveuMemberRechargeRecordService.saveAioveuMemberRechargeRecordandexecuteRecharge(formData);
             return Result.judge(result);
