@@ -116,28 +116,33 @@ public class AioveuMemberRechargeRecordServiceImpl extends ServiceImpl<AioveuMem
 
         log.info("原始RechargeNo：" +  formData.getRechargeNo());
 
-        AioveuMemberRechargeRecord entity = aioveuMemberRechargeRecordConverter.toEntity(formData);
-
-        // 如果充值单号为空，则生成
-        if (StrUtil.isBlank(entity.getRechargeNo())) {
+        // 1.如果单号为空，则生成
+        if (StrUtil.isBlank(formData.getRechargeNo())) {
 
             String newNo = noGenerator.generateAddRechargeNo();//单号生成器方法保持一致
-            entity.setRechargeNo(newNo);
+            formData.setRechargeNo(newNo);
             log.info("生成的newNo: " +  newNo);
         }
 
-        // 字段1：检查编号是否唯一（对于不依赖外键的字段，不可重复）
+        // 2.无论单号是生成的还是用户提供的，都要检查是否重复。
         LambdaQueryWrapper<AioveuMemberRechargeRecord> wrapper = new LambdaQueryWrapper<>();
         // 正确调用：传递 formData 参数
-        wrapper.eq(AioveuMemberRechargeRecord::getRechargeNo, entity.getRechargeNo());
+        wrapper.eq(AioveuMemberRechargeRecord::getRechargeNo, formData.getRechargeNo());
 
-        if (this.count(wrapper) > 0) {
+        //3.如果重复，则重新生成（如果是用户提供的，可能需要提示用户，但根据业务逻辑，这里选择重新生成）。
+        while (this.count(wrapper) > 0) {
             // 重新生成单号
             String againNo = noGenerator.generateAddRechargeNo();//单号生成器方法保持一致
-            entity.setRechargeNo(againNo);
+            formData.setRechargeNo(againNo);
             log.info("生成的againNo: " +  againNo);
+
+            //4.重新生成后，再次检查，直到不重复为止（或者设置最大重试次数）。
+            // 更新查询条件，检查新生成的单号
+            wrapper.clear();
+            wrapper.eq(AioveuMemberRechargeRecord::getRechargeNo, formData.getRechargeNo());
         }
 
+        AioveuMemberRechargeRecord entity = aioveuMemberRechargeRecordConverter.toEntity(formData);
         return this.save(entity);
     }
 

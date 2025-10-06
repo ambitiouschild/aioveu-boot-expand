@@ -1,6 +1,10 @@
 package com.aioveu.boot.aioveuLaundryClothingType.service.impl;
 
+import com.aioveu.boot.aioveuCommon.util.NumberGenerator.NoGenerator;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -26,11 +30,16 @@ import cn.hutool.core.util.StrUtil;
  * @author 可我不敌可爱
  * @since 2025-09-30 17:48
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AioveuLaundryClothingTypeServiceImpl extends ServiceImpl<AioveuLaundryClothingTypeMapper, AioveuLaundryClothingType> implements AioveuLaundryClothingTypeService {
 
     private final AioveuLaundryClothingTypeConverter aioveuLaundryClothingTypeConverter;
+
+    // 通过依赖注入获取NoGenerator
+    @Autowired
+    private NoGenerator noGenerator;
 
     /**
     * 获取衣物类型分页列表
@@ -67,6 +76,36 @@ public class AioveuLaundryClothingTypeServiceImpl extends ServiceImpl<AioveuLaun
      */
     @Override
     public boolean saveAioveuLaundryClothingType(AioveuLaundryClothingTypeForm formData) {
+
+        // 1.如果单号为空，则生成
+        if (StrUtil.isBlank(formData.getTypeCode())) {
+
+            String newTypeCode = noGenerator.generateLaundryClothingTypeCode();//单号生成器方法保持一致
+            formData.setTypeCode(newTypeCode);
+            log.info("生成的newTypeCode: " +  newTypeCode);
+
+        }
+
+        // 2.无论单号是生成的还是用户提供的，都要检查是否重复。
+        LambdaQueryWrapper<AioveuLaundryClothingType> wrapper = new LambdaQueryWrapper<>();
+        // 正确调用：传递 formData 参数
+        wrapper.eq(AioveuLaundryClothingType::getTypeCode, formData.getTypeCode());
+
+        //3.如果重复，则重新生成（如果是用户提供的，可能需要提示用户，但根据你的业务逻辑，这里选择重新生成）。
+
+        while (this.count(wrapper) > 0) {
+            // 重新生成单号
+            String againTypeCode = noGenerator.generateLaundryClothingTypeCode();//单号生成器方法保持一致
+            formData.setTypeCode(againTypeCode);
+            log.info("生成的againTypeCode: " +  againTypeCode);
+
+            //4.重新生成后，再次检查，直到不重复为止（或者设置最大重试次数）。
+            // 更新查询条件，检查新生成的单号
+            wrapper.clear();
+            wrapper.eq(AioveuLaundryClothingType::getTypeCode, formData.getTypeCode());
+        }
+
+
         AioveuLaundryClothingType entity = aioveuLaundryClothingTypeConverter.toEntity(formData);
         return this.save(entity);
     }
