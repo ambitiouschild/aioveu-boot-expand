@@ -21,8 +21,9 @@ public class AioveuMemberOptionVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    //必须使用和前端一样的字段，表单编辑时才会匹配
     @Schema(description = "会员ID")
-    private Long id;
+    private Long memberId;
     @Schema(description = "会员卡号")
     private String memberNo;
 }

@@ -42,7 +42,7 @@ public class AioveuEntityUniqueValidatorTest {
     //使用Spring的依赖注入（适用于集成测试，需要真实的数据库交互）
     //如果你需要测试真实数据库行为，应该使用集成测试而不是单元测试
     @Autowired
-    private AioveuMemberAccountService aioveuMemberAccountService1;
+    private AioveuMemberAccountService aioveuMemberAccountService2;
 
     // 使用标准的 JPA EntityManager
     @PersistenceContext
@@ -187,7 +187,7 @@ public class AioveuEntityUniqueValidatorTest {
 
 
     @Test
-    @Transactional
+    @Transactional  //测试时必须启动测试配置的测试数据库
     public void testValidateUniqueForUpdate_Success() {
         // 1. 创建测试数据
         AioveuMemberAccount existingAccount = new AioveuMemberAccount();

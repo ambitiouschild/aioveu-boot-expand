@@ -21,7 +21,7 @@ spring:
         date-time: yyyy-MM-dd HH:mm:ss
 
     dynamic:
-      primary: aioveu    # 设置默认数据源  master  aioveu
+      primary: aioveuTest    # 设置默认数据源  master  aioveu
       strict: false # 数据源找不到时是否抛出异常
       datasource:
         master: # 主库
@@ -51,6 +51,8 @@ spring:
           url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
           username: aioveuTest
           password: aioveuTest
+
+          #测试中使用了H2内存数据库，但是H2数据库中并没有创建所需的表结构
   #  # 显示 SQL 语句
   #  spring.jpa.show-sql=true
   #  spring.jpa.properties.hibernate.format_sql=true

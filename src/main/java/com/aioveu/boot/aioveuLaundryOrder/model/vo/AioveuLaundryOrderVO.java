@@ -29,6 +29,11 @@ public class AioveuLaundryOrderVO implements Serializable {
     private String orderNo;
     @Schema(description = "会员ID")
     private Long memberId;
+
+    @Schema(description = "会员卡号")
+    private String memberNo;
+
+
     @Schema(description = "客户姓名")
     private String customerName;
     @Schema(description = "客户电话")

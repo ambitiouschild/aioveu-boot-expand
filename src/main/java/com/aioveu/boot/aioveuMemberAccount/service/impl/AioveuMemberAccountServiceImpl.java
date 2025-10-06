@@ -1,5 +1,6 @@
 package com.aioveu.boot.aioveuMemberAccount.service.impl;
 
+import com.aioveu.boot.aioveuCommon.util.AioveuEntityUniqueValidator.AioveuEntityUniqueValidator;
 import com.aioveu.boot.aioveuCommon.util.AioveuNameSetter.AioveuNameSetter;
 import com.aioveu.boot.aioveuCommon.util.AioveuNameValidator.AioveuNameValidator;
 import com.aioveu.boot.aioveuMember.model.entity.AioveuMember;
@@ -94,15 +95,15 @@ public class AioveuMemberAccountServiceImpl extends ServiceImpl<AioveuMemberAcco
     @Override
     public boolean saveAioveuMemberAccount(AioveuMemberAccountForm formData) {
 
-//        // 字段1：检查编号是否唯一（对于不依赖外键的字段，不可重复）
-//        AioveuNameValidator.validateEntityUnique(
-//                formData,
-//                AioveuMemberAccountForm::getMemberId,
-//                AioveuMemberAccount::getMemberId,
-//                null,
-//                this,
-//                "会员账户"
-//        );
+        // 字段1：检查编号是否唯一（对于不依赖外键的字段，不可重复）
+        AioveuEntityUniqueValidator.validateUniqueForCreate(
+                formData,
+                AioveuMemberAccountForm::getMemberId, // 获取账户号
+                AioveuMemberAccount::getMemberId,    // 实体字段
+                this,
+                "会员账户",
+                "会员卡号"
+        );
 
         AioveuMemberAccount entity = aioveuMemberAccountConverter.toEntity(formData);
         return this.save(entity);

@@ -69,6 +69,13 @@ public interface AioveuMemberService extends IService<AioveuMember> {
      * 批量获取映射信息（新增方法）用于AioveuNameSetter 会员姓名 // 无参，全查
      */
     Map<Long, String> getMemberNameMap();
+
+
+    /**
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter 会员手机号 // 无参，全查
+     */
+    Map<Long, String> getMemberPhoneMap();
+
     /**
      * 获取所有会员卡号列表（用于下拉选择框）
      *

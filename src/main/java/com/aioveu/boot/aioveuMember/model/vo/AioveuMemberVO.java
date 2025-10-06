@@ -25,10 +25,12 @@ public class AioveuMemberVO implements Serializable {
 
     @Schema(description = "会员ID")
     private Long id;
+
     @Schema(description = "会员卡号")
     private String memberNo;
     @Schema(description = "会员姓名")
     private String name;
+
     @Schema(description = "手机号")
     private String phone;
     @Schema(description = "身份证号")

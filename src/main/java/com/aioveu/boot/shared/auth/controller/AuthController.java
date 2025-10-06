@@ -43,8 +43,8 @@ public class AuthController {
     @PostMapping("/login")
     @Log(value = "登录", module = LogModuleEnum.LOGIN)
     public Result<AuthenticationToken> login(
-            @Parameter(description = "用户名", example = "admin") @RequestParam String username,
-            @Parameter(description = "密码", example = "123456") @RequestParam String password
+            @Parameter(description = "用户名", example = "aioveu") @RequestParam String username,
+            @Parameter(description = "密码", example = "aioveu") @RequestParam String password
     ) {
         AuthenticationToken authenticationToken = authService.login(username, password);
         return Result.success(authenticationToken);

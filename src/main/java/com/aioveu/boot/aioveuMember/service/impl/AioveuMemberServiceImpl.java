@@ -149,7 +149,7 @@ public class AioveuMemberServiceImpl extends ServiceImpl<AioveuMemberMapper, Aio
     }
 
     /**
-     * 批量获取映射信息（新增方法）用于AioveuNameSetter 会员姓名 // 无参，全查
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter 会员姓名 // 全参
      */
     @Override
     public Map<Long, String> getMemberNameMap() {
@@ -165,6 +165,25 @@ public class AioveuMemberServiceImpl extends ServiceImpl<AioveuMemberMapper, Aio
                         AioveuMember::getId,
                         AioveuMember::getName
                 ));
+    }
+
+    /**
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter 会员手机号 // 全参
+     */
+    @Override
+    public Map<Long, String> getMemberPhoneMap(){
+        // 1.使用 LambdaQueryWrapper，编译时安全
+        List<AioveuMember> memberPhones = lambdaQuery()
+                .select(AioveuMember::getId, AioveuMember::getPhone)
+                .list();
+
+        // 2.转换为Map: key=ID, value=名称
+        return memberPhones.stream()
+                .collect(Collectors.toMap(
+                        AioveuMember::getId,
+                        AioveuMember::getPhone
+                ));
+
     }
 
     /**

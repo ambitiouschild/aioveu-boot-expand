@@ -29,6 +29,16 @@ public class AioveuMemberRechargeRecordVO implements Serializable {
     private String rechargeNo;
     @Schema(description = "会员ID")
     private Long memberId;
+
+
+    //新增
+    @Schema(description = "会员卡号")
+    private String memberNo;
+    //新增
+    @Schema(description = "会员姓名")
+    private String name;
+
+
     @Schema(description = "充值金额")
     private BigDecimal amount;
     @Schema(description = "赠送金额")

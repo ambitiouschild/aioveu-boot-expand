@@ -1,6 +1,12 @@
 package com.aioveu.boot.aioveuLaundryOrder.service.impl;
 
+import com.aioveu.boot.aioveuCommon.util.AioveuNameSetter.AioveuNameSetter;
+import com.aioveu.boot.aioveuCommon.util.NumberGenerator.NoGenerator;
+import com.aioveu.boot.aioveuMember.service.AioveuMemberService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -26,11 +32,19 @@ import cn.hutool.core.util.StrUtil;
  * @author 可我不敌可爱
  * @since 2025-09-30 17:43
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AioveuLaundryOrderServiceImpl extends ServiceImpl<AioveuLaundryOrderMapper, AioveuLaundryOrder> implements AioveuLaundryOrderService {
 
     private final AioveuLaundryOrderConverter aioveuLaundryOrderConverter;
+
+    @Autowired
+    private AioveuMemberService aioveuMemberService;
+
+    // 通过依赖注入获取NoGenerator
+    @Autowired
+    private NoGenerator noGenerator;
 
     /**
     * 获取洗衣订单分页列表
@@ -44,6 +58,28 @@ public class AioveuLaundryOrderServiceImpl extends ServiceImpl<AioveuLaundryOrde
                 new Page<>(queryParams.getPageNum(), queryParams.getPageSize()),
                 queryParams
         );
+
+        AioveuNameSetter.setNamesByMaps(
+                pageVO.getRecords(),             //1.VO列表,pageVO.getRecords(),List<T> vos，应该是List<VO>列表类型而不是单个对象
+                AioveuLaundryOrderVO::getMemberId,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
+                aioveuMemberService::getMemberNoMap,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
+                AioveuLaundryOrderVO::setMemberNo             // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
+        );
+
+//        AioveuNameSetter.setNamesByMaps(
+//                pageVO.getRecords(),             //1.VO列表,pageVO.getRecords(),List<T> vos，应该是List<VO>列表类型而不是单个对象
+//                AioveuLaundryOrderVO::getMemberId,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
+//                aioveuMemberService::getMemberNameMap,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
+//                AioveuLaundryOrderVO::setCustomerName             // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
+//        );
+
+//        AioveuNameSetter.setNamesByMaps(
+//                pageVO.getRecords(),             //1.VO列表,pageVO.getRecords(),List<T> vos，应该是List<VO>列表类型而不是单个对象
+//                AioveuLaundryOrderVO::getMemberId,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
+//                aioveuMemberService::getMemberPhoneMap,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
+//                AioveuLaundryOrderVO::setCustomerPhone            // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
+//        );
+
         return pageVO;
     }
     
@@ -67,6 +103,27 @@ public class AioveuLaundryOrderServiceImpl extends ServiceImpl<AioveuLaundryOrde
      */
     @Override
     public boolean saveAioveuLaundryOrder(AioveuLaundryOrderForm formData) {
+
+        // 如果充值单号为空，则生成
+        if (StrUtil.isBlank(formData.getOrderNo())) {
+
+            String newNo = noGenerator.generateAddRechargeNo();//单号生成器方法保持一致
+            formData.setOrderNo(newNo);
+            log.info("生成的newNo: " +  newNo);
+        }
+
+        // 字段1：检查编号是否唯一（对于不依赖外键的字段，不可重复）
+        LambdaQueryWrapper<AioveuLaundryOrder> wrapper = new LambdaQueryWrapper<>();
+        // 正确调用：传递 formData 参数
+        wrapper.eq(AioveuLaundryOrder::getOrderNo, formData.getOrderNo());
+
+        if (this.count(wrapper) > 0) {
+            // 重新生成单号
+            String againNo = noGenerator.generateAddRechargeNo();//单号生成器方法保持一致
+            formData.setOrderNo(againNo);
+            log.info("生成的againNo: " +  againNo);
+        }
+
         AioveuLaundryOrder entity = aioveuLaundryOrderConverter.toEntity(formData);
         return this.save(entity);
     }

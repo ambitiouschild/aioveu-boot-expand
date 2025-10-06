@@ -29,12 +29,12 @@ public class AioveuLaundryOrderForm implements Serializable {
 
 
     @Schema(description = "订单号")
-    @NotBlank(message = "订单号不能为空")
+//    @NotBlank(message = "订单号不能为空")
     @Size(max=30, message="订单号长度不能超过30个字符")
     private String orderNo;
 
     @Schema(description = "会员ID")
-    @NotNull(message = "会员ID不能为空")
+//    @NotNull(message = "会员ID不能为空")
     private Long memberId;
 
     @Schema(description = "客户姓名")
@@ -66,7 +66,7 @@ public class AioveuLaundryOrderForm implements Serializable {
     private Integer paymentStatus;
 
     @Schema(description = "支付方式ID")
-    @NotNull(message = "支付方式ID不能为空")
+//    @NotNull(message = "支付方式ID不能为空")
     private Integer paymentMethodId;
 
     @Schema(description = "收衣时间")
