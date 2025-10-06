@@ -3,9 +3,13 @@ package com.aioveu.boot.aioveuLaundryOrder.service;
 import com.aioveu.boot.aioveuLaundryOrder.model.entity.AioveuLaundryOrder;
 import com.aioveu.boot.aioveuLaundryOrder.model.form.AioveuLaundryOrderForm;
 import com.aioveu.boot.aioveuLaundryOrder.model.query.AioveuLaundryOrderQuery;
+import com.aioveu.boot.aioveuLaundryOrder.model.vo.AioveuLaundryOrderOptionVO;
 import com.aioveu.boot.aioveuLaundryOrder.model.vo.AioveuLaundryOrderVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 洗衣订单服务类
@@ -54,5 +58,17 @@ public interface AioveuLaundryOrderService extends IService<AioveuLaundryOrder> 
      * @return 是否删除成功
      */
     boolean deleteAioveuLaundryOrders(String ids);
+
+    /**
+     * 获取选项列表（用于下拉选择框）
+     *
+     * @return 选项列表
+     */
+    List<AioveuLaundryOrderOptionVO> getAllLaundryOrderOptions();
+
+    /**
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter  // 无参，全查
+     */
+    Map<Long, String> getLaundryOrderNoMap();
 
 }

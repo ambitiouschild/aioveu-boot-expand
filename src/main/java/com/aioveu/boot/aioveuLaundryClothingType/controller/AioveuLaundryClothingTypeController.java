@@ -1,5 +1,6 @@
 package com.aioveu.boot.aioveuLaundryClothingType.controller;
 
+import com.aioveu.boot.aioveuLaundryClothingType.model.vo.AioveuLaundryClothingTypeOptionVO;
 import com.aioveu.boot.aioveuLaundryClothingType.service.AioveuLaundryClothingTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 /**
  * 衣物类型前端控制层
@@ -77,5 +80,18 @@ public class AioveuLaundryClothingTypeController  {
     ) {
         boolean result = aioveuLaundryClothingTypeService.deleteAioveuLaundryClothingTypes(ids);
         return Result.judge(result);
+    }
+
+    /**
+     * 获取衣物类型列表（用于下拉选择框）
+     * @return 选项列表
+     */
+    @Operation(summary = "获取衣物类型列表（用于下拉选择框）")
+    @GetMapping("/options")
+    public Result<List<AioveuLaundryClothingTypeOptionVO>> getAllLaundryClothingTypeOptions() {
+
+        List<AioveuLaundryClothingTypeOptionVO> types  = aioveuLaundryClothingTypeService.getAllLaundryClothingTypeOptions();
+
+        return Result.success(types);
     }
 }

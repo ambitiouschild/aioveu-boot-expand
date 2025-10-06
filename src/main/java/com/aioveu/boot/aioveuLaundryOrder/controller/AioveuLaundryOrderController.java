@@ -1,5 +1,6 @@
 package com.aioveu.boot.aioveuLaundryOrder.controller;
 
+import com.aioveu.boot.aioveuLaundryOrder.model.vo.AioveuLaundryOrderOptionVO;
 import com.aioveu.boot.aioveuLaundryOrder.service.AioveuLaundryOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 /**
  * 洗衣订单前端控制层
@@ -77,5 +80,18 @@ public class AioveuLaundryOrderController  {
     ) {
         boolean result = aioveuLaundryOrderService.deleteAioveuLaundryOrders(ids);
         return Result.judge(result);
+    }
+
+    /**
+     * 获取洗衣订单列表（用于下拉选择框）
+     * @return 选项列表
+     */
+    @Operation(summary = "获取洗衣订单列表（用于下拉选择框）")
+    @GetMapping("/options")
+    public Result<List<AioveuLaundryOrderOptionVO>> getAllLaundryOrderOptions() {
+
+        List<AioveuLaundryOrderOptionVO> laundryOrderOptions  = aioveuLaundryOrderService.getAllLaundryOrderOptions();
+
+        return Result.success(laundryOrderOptions);
     }
 }

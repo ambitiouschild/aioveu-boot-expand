@@ -2,6 +2,7 @@ package com.aioveu.boot.aioveuLaundryOrder.service.impl;
 
 import com.aioveu.boot.aioveuCommon.util.AioveuNameSetter.AioveuNameSetter;
 import com.aioveu.boot.aioveuCommon.util.NumberGenerator.NoGenerator;
+import com.aioveu.boot.aioveuLaundryOrder.model.vo.AioveuLaundryOrderOptionVO;
 import com.aioveu.boot.aioveuMember.service.AioveuMemberService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import com.aioveu.boot.aioveuLaundryOrder.converter.AioveuLaundryOrderConverter;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.lang.Assert;
@@ -104,24 +106,30 @@ public class AioveuLaundryOrderServiceImpl extends ServiceImpl<AioveuLaundryOrde
     @Override
     public boolean saveAioveuLaundryOrder(AioveuLaundryOrderForm formData) {
 
-        // 如果充值单号为空，则生成
+        // 1.如果单号为空，则生成
         if (StrUtil.isBlank(formData.getOrderNo())) {
 
-            String newNo = noGenerator.generateAddRechargeNo();//单号生成器方法保持一致
-            formData.setOrderNo(newNo);
-            log.info("生成的newNo: " +  newNo);
+            String newOrderNo = noGenerator.generateLaundryClothingOrderNo();//单号生成器方法保持一致
+            formData.setOrderNo(newOrderNo);
+            log.info("生成的newOrderNo: " +  newOrderNo);
         }
 
-        // 字段1：检查编号是否唯一（对于不依赖外键的字段，不可重复）
+        //  2.无论单号是生成的还是用户提供的，都要检查是否重复。
         LambdaQueryWrapper<AioveuLaundryOrder> wrapper = new LambdaQueryWrapper<>();
         // 正确调用：传递 formData 参数
         wrapper.eq(AioveuLaundryOrder::getOrderNo, formData.getOrderNo());
 
-        if (this.count(wrapper) > 0) {
+        //3.如果重复，则重新生成（如果是用户提供的，可能需要提示用户，但根据业务逻辑，这里选择重新生成）。
+        while (this.count(wrapper) > 0) {
             // 重新生成单号
-            String againNo = noGenerator.generateAddRechargeNo();//单号生成器方法保持一致
-            formData.setOrderNo(againNo);
-            log.info("生成的againNo: " +  againNo);
+            String againOrderNo = noGenerator.generateLaundryClothingOrderNo();//单号生成器方法保持一致
+            formData.setOrderNo(againOrderNo);
+            log.info("生成的againOrderNo: " +  againOrderNo);
+
+            //4.重新生成后，再次检查，直到不重复为止（或者设置最大重试次数）。
+            // 更新查询条件，检查新生成的单号
+            wrapper.clear();
+            wrapper.eq(AioveuLaundryOrder::getOrderNo, formData.getOrderNo());
         }
 
         AioveuLaundryOrder entity = aioveuLaundryOrderConverter.toEntity(formData);
@@ -157,4 +165,44 @@ public class AioveuLaundryOrderServiceImpl extends ServiceImpl<AioveuLaundryOrde
         return this.removeByIds(idList);
     }
 
+    /**
+     * 获取选项列表（用于下拉选择框）
+     *
+     * @return 选项列表
+     */
+    @Override
+    public List<AioveuLaundryOrderOptionVO> getAllLaundryOrderOptions() {
+
+        // 1.使用 LambdaQueryWrapper，编译时安全
+        List<AioveuLaundryOrder> laundryOrders = lambdaQuery()
+                .select(AioveuLaundryOrder::getId, AioveuLaundryOrder::getOrderNo)
+                .list();
+
+        // 2.转换为选项对象
+        List<AioveuLaundryOrderOptionVO>  laundryOrderOptionVO  = laundryOrders.stream()
+                .map(laundryOrder -> new AioveuLaundryOrderOptionVO(laundryOrder.getId(), laundryOrder.getOrderNo()))
+                .collect(Collectors.toList());
+
+        return laundryOrderOptionVO;
+    }
+
+    /**
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter  无参数
+     */
+    @Override
+    public Map<Long, String> getLaundryOrderNoMap() {
+
+
+        // 1.使用 LambdaQueryWrapper，编译时安全
+        List<AioveuLaundryOrder> laundryOrders = lambdaQuery()
+                .select(AioveuLaundryOrder::getId, AioveuLaundryOrder::getOrderNo)
+                .list();
+
+        // 2.转换为Map: key=ID, value=名称
+        return laundryOrders.stream()
+                .collect(Collectors.toMap(
+                        AioveuLaundryOrder::getId,
+                        AioveuLaundryOrder::getOrderNo
+                ));
+    }
 }

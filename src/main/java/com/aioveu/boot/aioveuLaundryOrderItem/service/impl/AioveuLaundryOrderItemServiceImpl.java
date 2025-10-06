@@ -1,6 +1,12 @@
 package com.aioveu.boot.aioveuLaundryOrderItem.service.impl;
 
+import com.aioveu.boot.aioveuCommon.util.AioveuEntityUniqueValidator.AioveuEntityUniqueValidator;
+import com.aioveu.boot.aioveuCommon.util.AioveuNameSetter.AioveuNameSetter;
+import com.aioveu.boot.aioveuLaundryClothingType.service.AioveuLaundryClothingTypeService;
+import com.aioveu.boot.aioveuLaundryOrder.service.AioveuLaundryOrderService;
+import com.aioveu.boot.aioveuMemberAccount.model.entity.AioveuMemberAccount;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -32,6 +38,12 @@ public class AioveuLaundryOrderItemServiceImpl extends ServiceImpl<AioveuLaundry
 
     private final AioveuLaundryOrderItemConverter aioveuLaundryOrderItemConverter;
 
+    @Autowired
+    private AioveuLaundryOrderService aioveuLaundryOrderService;
+
+    @Autowired
+    private AioveuLaundryClothingTypeService aioveuLaundryClothingTypeService;
+
     /**
     * 获取洗衣订单衣物明细分页列表
     *
@@ -44,6 +56,21 @@ public class AioveuLaundryOrderItemServiceImpl extends ServiceImpl<AioveuLaundry
                 new Page<>(queryParams.getPageNum(), queryParams.getPageSize()),
                 queryParams
         );
+
+        AioveuNameSetter.setNamesByMaps(
+                pageVO.getRecords(),             //1.VO列表,pageVO.getRecords(),List<T> vos，应该是List<VO>列表类型而不是单个对象
+                AioveuLaundryOrderItemVO::getOrderId,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
+                aioveuLaundryOrderService::getLaundryOrderNoMap,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
+                AioveuLaundryOrderItemVO::setOrderNo             // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
+        );
+
+        AioveuNameSetter.setNamesByMaps(
+                pageVO.getRecords(),             //1.VO列表,pageVO.getRecords(),List<T> vos，应该是List<VO>列表类型而不是单个对象
+                AioveuLaundryOrderItemVO::getClothingTypeId,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
+                aioveuLaundryClothingTypeService::getLaundryClothingTypeMap,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
+                AioveuLaundryOrderItemVO::setClothingTypeName             // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
+        );
+
         return pageVO;
     }
     
@@ -67,6 +94,17 @@ public class AioveuLaundryOrderItemServiceImpl extends ServiceImpl<AioveuLaundry
      */
     @Override
     public boolean saveAioveuLaundryOrderItem(AioveuLaundryOrderItemForm formData) {
+
+        // 字段1：检查编号是否唯一（对于不依赖外键的字段，不可重复）
+        AioveuEntityUniqueValidator.validateUniqueForCreate(
+                formData,
+                AioveuLaundryOrderItemForm::getOrderId, // 获取账户号
+                AioveuLaundryOrderItem::getOrderId,    // 实体字段
+                this,
+                "洗衣订单衣物明细",
+                "订单号"
+        );
+
         AioveuLaundryOrderItem entity = aioveuLaundryOrderItemConverter.toEntity(formData);
         return this.save(entity);
     }

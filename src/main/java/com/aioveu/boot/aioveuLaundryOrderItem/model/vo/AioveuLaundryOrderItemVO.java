@@ -27,8 +27,17 @@ public class AioveuLaundryOrderItemVO implements Serializable {
     private Long id;
     @Schema(description = "订单ID")
     private Long orderId;
+
+    @Schema(description = "订单号")
+    private String orderNo;
+
+
     @Schema(description = "衣物类型ID")
     private Long clothingTypeId;
+
+    @Schema(description = "衣物类型")
+    private String clothingTypeName;
+
     @Schema(description = "自定义衣物类型")
     private String customType;
     @Schema(description = "问题描述")

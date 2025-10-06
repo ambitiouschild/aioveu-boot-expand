@@ -1,6 +1,7 @@
 package com.aioveu.boot.aioveuLaundryClothingType.service.impl;
 
 import com.aioveu.boot.aioveuCommon.util.NumberGenerator.NoGenerator;
+import com.aioveu.boot.aioveuLaundryClothingType.model.vo.AioveuLaundryClothingTypeOptionVO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import com.aioveu.boot.aioveuLaundryClothingType.converter.AioveuLaundryClothing
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.lang.Assert;
@@ -137,6 +139,47 @@ public class AioveuLaundryClothingTypeServiceImpl extends ServiceImpl<AioveuLaun
                 .map(Long::parseLong)
                 .toList();
         return this.removeByIds(idList);
+    }
+
+    /**
+     * 获取选项列表（用于下拉选择框）
+     *
+     * @return 选项列表
+     */
+    @Override
+    public List<AioveuLaundryClothingTypeOptionVO> getAllLaundryClothingTypeOptions() {
+
+        // 1.使用 LambdaQueryWrapper，编译时安全
+        List<AioveuLaundryClothingType> types = lambdaQuery()
+                .select(AioveuLaundryClothingType::getId, AioveuLaundryClothingType::getTypeName)
+                .list();
+
+        // 2.转换为选项对象
+        List<AioveuLaundryClothingTypeOptionVO>  typeOption  = types.stream()
+                .map(type -> new AioveuLaundryClothingTypeOptionVO(type.getId(), type.getTypeName()))
+                .collect(Collectors.toList());
+
+        return typeOption;
+    }
+
+    /**
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter  无参数
+     */
+    @Override
+    public Map<Long, String> getLaundryClothingTypeMap() {
+
+
+        // 1.使用 LambdaQueryWrapper，编译时安全
+        List<AioveuLaundryClothingType> types = lambdaQuery()
+                .select(AioveuLaundryClothingType::getId, AioveuLaundryClothingType::getTypeName)
+                .list();
+
+        // 2.转换为Map: key=ID, value=名称
+        return types.stream()
+                .collect(Collectors.toMap(
+                        AioveuLaundryClothingType::getId,
+                        AioveuLaundryClothingType::getTypeName
+                ));
     }
 
 }

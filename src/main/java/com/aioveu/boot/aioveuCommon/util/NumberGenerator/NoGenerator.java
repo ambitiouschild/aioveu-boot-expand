@@ -67,7 +67,7 @@ public class NoGenerator {
             seq = 1;
         }
         // 正确格式化序列号
-        return "可我不敌可爱" + dateStr + String.format("%06d", seq);
+        return "可我不敌可爱" + dateStr + String.format("%04d", seq);
     }
 
 
@@ -91,13 +91,13 @@ public class NoGenerator {
             seq = 1;
         }
         // 正确格式化序列号
-        return "紫罗兰" + dateStr + String.format("%06d", seq);
+        return "紫罗兰" + dateStr + String.format("%04d", seq);
     }
 
     /**
-     * 生成新增单号（时间戳+序列号）
-     * 格式：TR + yyyyMMdd + 6位序列号
-     * 示例：TR20251003000001
+     * 生成洗衣衣物类型（时间戳+序列号）
+     * 格式：CT + 3位序列号
+     * 示例：CT001
      */
     public String generateLaundryClothingTypeCode() {
         // 获取当前日期字符串
@@ -114,6 +114,29 @@ public class NoGenerator {
         // 正确格式化序列号
         return "CT"  + String.format("%03d", seq);
     }
+
+    /**
+     * 生成洗衣订单号（时间戳+序列号）
+     * 格式：LC + yyyyMMdd + 6位序列号
+     * 示例：LC20251003000001
+     */
+    public String generateLaundryClothingOrderNo() {
+        // 获取当前日期字符串
+        String dateStr = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        // 获取或创建序列号计数器
+        AtomicInteger sequence = SEQUENCE_MAP.computeIfAbsent(dateStr, k -> new AtomicInteger(0));
+        // 递增序列号
+        int seq = sequence.incrementAndGet();
+        // 处理溢出（超过999999）
+        if (seq > 999999) {
+            sequence.set(1);
+            seq = 1;
+        }
+        // 正确格式化序列号
+        return "LC"  + dateStr + String.format("%04d", seq);
+    }
+
+
 
     /**
      * 每天凌晨0点重置序列号
