@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.aioveu.boot.common.base.BaseEntity;
 
+import javax.persistence.Entity;
+
 /**
  * 会员充值账户实体对象
  *
@@ -16,6 +18,7 @@ import com.aioveu.boot.common.base.BaseEntity;
  */
 @Getter
 @Setter
+@Entity
 @TableName("aioveu_member_account")
 public class AioveuMemberAccount extends BaseEntity {
 

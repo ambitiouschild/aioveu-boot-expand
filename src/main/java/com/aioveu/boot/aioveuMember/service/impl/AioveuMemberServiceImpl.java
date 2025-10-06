@@ -1,6 +1,7 @@
 package com.aioveu.boot.aioveuMember.service.impl;
 
 import com.aioveu.boot.aioveuCommon.util.AioveuNameSetter.AioveuNameSetter;
+import com.aioveu.boot.aioveuMember.model.vo.AioveuMemberOptionVO;
 import com.aioveu.boot.aioveuMemberLevel.service.AioveuMemberLevelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,7 @@ public class AioveuMemberServiceImpl extends ServiceImpl<AioveuMemberMapper, Aio
                 queryParams
         );
 
-//        AioveuNameSetter.setNames(
+//        AioveuNameSetter.setNamesByIds(
 //                pageVO.getRecords(),             //1.VO列表,pageVO.getRecords(),List<T> vos，应该是List<VO>列表类型而不是单个对象
 //                AioveuMemberVO::getLevelId,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
 //                aioveuMemberLevelService::getMemberLevelMapByIds,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
@@ -145,6 +146,46 @@ public class AioveuMemberServiceImpl extends ServiceImpl<AioveuMemberMapper, Aio
                         AioveuMember::getId,
                         AioveuMember::getMemberNo
                 ));
+    }
+
+    /**
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter 会员姓名 // 无参，全查
+     */
+    @Override
+    public Map<Long, String> getMemberNameMap() {
+
+        // 1.使用 LambdaQueryWrapper，编译时安全
+        List<AioveuMember> names = lambdaQuery()
+                .select(AioveuMember::getId, AioveuMember::getName)
+                .list();
+
+        // 2.转换为Map: key=ID, value=名称
+        return names.stream()
+                .collect(Collectors.toMap(
+                        AioveuMember::getId,
+                        AioveuMember::getName
+                ));
+    }
+
+    /**
+     * 获取所有会员卡号列表（用于下拉选择框）
+     *
+     * @return 会员卡号选项列表
+     */
+    @Override
+    public List<AioveuMemberOptionVO> getAllMemberNoOptions() {
+        // 1.使用 LambdaQueryWrapper，编译时安全
+        List<AioveuMember> members = lambdaQuery()
+                .select(AioveuMember::getId, AioveuMember::getMemberNo)
+                .list();
+
+        // 2.转换为选项对象
+        List<AioveuMemberOptionVO>  aioveuMemberOptionVO  = members.stream()
+                .map(member -> new AioveuMemberOptionVO(member.getId(), member.getMemberNo()))
+                .collect(Collectors.toList());
+
+        return aioveuMemberOptionVO;
+
     }
 
 }

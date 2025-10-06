@@ -1,6 +1,8 @@
 package com.aioveu.boot.aioveuMemberAccount.service.impl;
 
 import com.aioveu.boot.aioveuCommon.util.AioveuNameSetter.AioveuNameSetter;
+import com.aioveu.boot.aioveuCommon.util.AioveuNameValidator.AioveuNameValidator;
+import com.aioveu.boot.aioveuMember.model.entity.AioveuMember;
 import com.aioveu.boot.aioveuMember.service.AioveuMemberService;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.hpsf.Date;
@@ -61,6 +63,13 @@ public class AioveuMemberAccountServiceImpl extends ServiceImpl<AioveuMemberAcco
                 AioveuMemberAccountVO::setMemberNo             // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
         );
 
+        AioveuNameSetter.setNamesByMaps(
+                pageVO.getRecords(),             //1.VO列表,pageVO.getRecords(),List<T> vos，应该是List<VO>列表类型而不是单个对象
+                AioveuMemberAccountVO::getMemberId,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
+                aioveuMemberService::getMemberNameMap,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
+                AioveuMemberAccountVO::setName             // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
+        );
+
         return pageVO;
     }
     
@@ -84,6 +93,17 @@ public class AioveuMemberAccountServiceImpl extends ServiceImpl<AioveuMemberAcco
      */
     @Override
     public boolean saveAioveuMemberAccount(AioveuMemberAccountForm formData) {
+
+//        // 字段1：检查编号是否唯一（对于不依赖外键的字段，不可重复）
+//        AioveuNameValidator.validateEntityUnique(
+//                formData,
+//                AioveuMemberAccountForm::getMemberId,
+//                AioveuMemberAccount::getMemberId,
+//                null,
+//                this,
+//                "会员账户"
+//        );
+
         AioveuMemberAccount entity = aioveuMemberAccountConverter.toEntity(formData);
         return this.save(entity);
     }

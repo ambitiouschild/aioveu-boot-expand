@@ -4,9 +4,11 @@ import com.aioveu.boot.aioveuMember.model.entity.AioveuMember;
 import com.aioveu.boot.aioveuMember.model.form.AioveuMemberForm;
 import com.aioveu.boot.aioveuMember.model.query.AioveuMemberQuery;
 import com.aioveu.boot.aioveuMember.model.vo.AioveuMemberVO;
+import com.aioveu.boot.aioveuMember.model.vo.AioveuMemberOptionVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,8 +61,20 @@ public interface AioveuMemberService extends IService<AioveuMember> {
 
 
     /**
-     * 批量获取映射信息（新增方法）用于AioveuNameSetter  // 无参，全查
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter 会员卡号 // 无参，全查
      */
     Map<Long, String> getMemberNoMap();
+
+    /**
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter 会员姓名 // 无参，全查
+     */
+    Map<Long, String> getMemberNameMap();
+    /**
+     * 获取所有会员卡号列表（用于下拉选择框）
+     *
+     * @return 会员卡号选项列表
+     */
+    List<AioveuMemberOptionVO> getAllMemberNoOptions();
+
 
 }

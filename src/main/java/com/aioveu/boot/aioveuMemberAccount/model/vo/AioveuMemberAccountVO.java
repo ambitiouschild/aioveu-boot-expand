@@ -28,8 +28,12 @@ public class AioveuMemberAccountVO implements Serializable {
     @Schema(description = "会员ID")
     private Long memberId;
 
+    //新增
     @Schema(description = "会员卡号")
     private String memberNo;
+    //新增
+    @Schema(description = "会员姓名")
+    private String name;
 
 
     @Schema(description = "现金余额")

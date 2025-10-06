@@ -40,12 +40,32 @@ public class AioveuNameSetter {
 
     /**
      *  AioveuNameSetter通用名称设置调用
-         NameSetter.setNames(
+         NameSetter.setNamesByIds(
              List<AioveuVO>             //1.VO列表,pageVO.getRecords(),List<T> vos，应该是List<VO>列表类型而不是单个对象
              AioveuVO::getId,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
              Service::getMapByIds,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
              AioveuVO::setName          // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
              )(pageVO.getRecords());
+     */
+
+    /**
+     *  AioveuNameSetter通用名称设置调用
+     NameSetter.setNamesByMaps(
+     List<AioveuVO>             //1.VO列表,pageVO.getRecords(),List<T> vos，应该是List<VO>列表类型而不是单个对象
+     AioveuVO::getId,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
+     Service::getNameMap,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
+     AioveuVO::setName          // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
+     )(pageVO.getRecords());
+     */
+
+    /**
+     *  AioveuNameSetter通用名称设置调用
+     NameSetter.setNamesByMapping(
+     List<AioveuVO>             //1.VO列表,pageVO.getRecords(),List<T> vos，应该是List<VO>列表类型而不是单个对象
+     AioveuVO::getId,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
+     Service::getNameMapping,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
+     AioveuVO::setName          // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
+     )(pageVO.getRecords());
      */
 
 

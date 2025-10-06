@@ -1,5 +1,6 @@
 package com.aioveu.boot.aioveuMember.controller;
 
+import com.aioveu.boot.aioveuMember.model.vo.AioveuMemberOptionVO;
 import com.aioveu.boot.aioveuMember.service.AioveuMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 /**
  * 会员信息管理前端控制层
@@ -78,5 +81,18 @@ public class AioveuMemberController  {
     ) {
         boolean result = aioveuMemberService.deleteAioveuMembers(ids);
         return Result.judge(result);
+    }
+
+    /**
+     * 获取所有会员卡号列表（用于下拉选择框）
+     * @return 会员卡号选项列表
+     */
+    @Operation(summary = "获取所有会员卡号列表（用于下拉选择框）")
+    @GetMapping("/options")
+    public Result<List<AioveuMemberOptionVO>> getAllMemberNoOptions() {
+
+        List<AioveuMemberOptionVO> memberNos  = aioveuMemberService.getAllMemberNoOptions();
+
+        return Result.success(memberNos);
     }
 }
