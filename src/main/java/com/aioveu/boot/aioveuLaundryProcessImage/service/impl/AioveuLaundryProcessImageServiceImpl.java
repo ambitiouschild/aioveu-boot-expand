@@ -4,6 +4,7 @@ import com.aioveu.boot.aioveuCommon.util.AioveuNameSetter.AioveuNameSetter;
 import com.aioveu.boot.aioveuEmployee.service.AioveuEmployeeService;
 import com.aioveu.boot.aioveuLaundryOrder.service.AioveuLaundryOrderService;
 import com.aioveu.boot.aioveuLaundryOrderItem.service.AioveuLaundryOrderItemService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,9 @@ public class AioveuLaundryProcessImageServiceImpl extends ServiceImpl<AioveuLaun
     private  AioveuLaundryOrderItemService aioveuLaundryOrderItemService;
     @Autowired
     private  AioveuEmployeeService aioveuEmployeeService;
+
+    @Autowired
+    private AioveuLaundryProcessImageMapper aioveuLaundryProcessImageMapper;
 
     /**
     * 获取洗衣流程图片记录分页列表
@@ -132,6 +136,63 @@ public class AioveuLaundryProcessImageServiceImpl extends ServiceImpl<AioveuLaun
                 .map(Long::parseLong)
                 .toList();
         return this.removeByIds(idList);
+    }
+
+
+    /**
+     * 实现批量插入洗衣流程图片记录
+     *
+     * @param list 洗衣流程图片记录ID，多个以英文逗号(,)分割
+     * @return 是否删除成功
+     */
+
+    @Override
+    public void saveBatch(List<AioveuLaundryProcessImage> list) {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+
+        // 分批次插入，避免 SQL 过长
+        int batchSize = 1000;
+        int total = list.size();
+        for (int i = 0; i < total; i += batchSize) {
+            int end = Math.min(i + batchSize, total);
+            List<AioveuLaundryProcessImage> subList = list.subList(i, end);
+            aioveuLaundryProcessImageMapper.batchInsert(subList);
+        }
+    }
+
+
+    /**
+     * 查询洗衣流程图片记录列表（不分页）
+     * @param query 查询条件
+     * @return 记录列表
+     */
+    @Override
+    public List<AioveuLaundryProcessImageVO> list(AioveuLaundryProcessImageQuery query){
+// 创建查询条件
+        QueryWrapper<AioveuLaundryProcessImage> wrapper = new QueryWrapper<>();
+
+        if (query.getOrderId() != null) {
+            wrapper.eq("order_id", query.getOrderId());
+        }
+        if (query.getItemId() != null) {
+            wrapper.eq("item_id", query.getItemId());
+        }
+        if (query.getImageType() != null) {
+            wrapper.eq("image_type", query.getImageType());
+        }
+        if (query.getUploadUser() != null) {
+            wrapper.eq("upload_user", query.getUploadUser());
+        }
+
+        // 执行查询
+        List<AioveuLaundryProcessImage> entities = aioveuLaundryProcessImageMapper.selectList(wrapper);
+
+        // 转换为VO列表
+        return entities.stream()
+                .map(aioveuLaundryProcessImageConverter::toVo)
+                .collect(Collectors.toList());
     }
 
 }

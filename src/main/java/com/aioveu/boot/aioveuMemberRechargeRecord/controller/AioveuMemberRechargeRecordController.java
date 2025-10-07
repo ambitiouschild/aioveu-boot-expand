@@ -32,6 +32,7 @@ public class AioveuMemberRechargeRecordController  {
 
     private final AioveuMemberRechargeRecordService aioveuMemberRechargeRecordService;
 
+    //分页查询接口实现
     @Operation(summary = "会员充值记录分页列表")
     @GetMapping("/page")
     @PreAuthorize("@ss.hasPerm('aioveuMemberRechargeRecord:aioveu-member-recharge-record:query')")
@@ -99,4 +100,5 @@ public class AioveuMemberRechargeRecordController  {
         boolean result = aioveuMemberRechargeRecordService.deleteAioveuMemberRechargeRecords(ids);
         return Result.judge(result);
     }
+
 }

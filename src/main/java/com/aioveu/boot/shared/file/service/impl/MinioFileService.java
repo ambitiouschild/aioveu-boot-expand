@@ -176,14 +176,15 @@ public class MinioFileService implements FileService {
                     }
                     // 如果自定义域名使用 http://，替换为 https://
                     else if (fileUrl.startsWith("http://")) {
-                        fileUrl = fileUrl.replace("http://", "https://");
+//                        fileUrl = fileUrl.replace("http://", "https://");
+                        fileUrl = fileUrl.replace("http://", "http://");
                     }
                 }
 
                 // 移除端口
-                if (fileUrl.contains(":")) {
-                    fileUrl = fileUrl.replaceFirst(":\\d+", ""); // 移除端口部分
-                }
+//                if (fileUrl.contains(":")) {
+//                    fileUrl = fileUrl.replaceFirst(":\\d+", ""); // 移除端口部分
+//                }
 
             }
 

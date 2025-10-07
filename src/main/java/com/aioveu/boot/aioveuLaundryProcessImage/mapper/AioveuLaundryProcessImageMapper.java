@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.aioveu.boot.aioveuLaundryProcessImage.model.query.AioveuLaundryProcessImageQuery;
 import com.aioveu.boot.aioveuLaundryProcessImage.model.vo.AioveuLaundryProcessImageVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 洗衣流程图片记录Mapper接口
@@ -24,5 +27,12 @@ public interface AioveuLaundryProcessImageMapper extends BaseMapper<AioveuLaundr
      * @return {@link Page<AioveuLaundryProcessImageVO>} 洗衣流程图片记录分页列表
      */
     Page<AioveuLaundryProcessImageVO> getAioveuLaundryProcessImagePage(Page<AioveuLaundryProcessImageVO> page, AioveuLaundryProcessImageQuery queryParams);
+
+    /**
+     * 批量插入洗衣流程图片记录
+     * @param list 实体列表
+     * @return 插入条数
+     */
+    int batchInsert(@Param("list") List<AioveuLaundryProcessImage> list);
 
 }

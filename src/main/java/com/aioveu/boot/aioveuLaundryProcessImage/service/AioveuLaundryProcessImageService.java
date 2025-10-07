@@ -7,6 +7,8 @@ import com.aioveu.boot.aioveuLaundryProcessImage.model.vo.AioveuLaundryProcessIm
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * 洗衣流程图片记录服务类
  *
@@ -54,5 +56,21 @@ public interface AioveuLaundryProcessImageService extends IService<AioveuLaundry
      * @return 是否删除成功
      */
     boolean deleteAioveuLaundryProcessImages(String ids);
+
+
+    /**
+     * 实现批量插入洗衣流程图片记录
+     *
+     * @param list 洗衣流程图片记录ID，多个以英文逗号(,)分割
+     * @return 是否删除成功
+     */
+    void saveBatch(List<AioveuLaundryProcessImage> list);
+
+    /**
+     * 查询洗衣流程图片记录列表（不分页）
+     * @param query 查询条件
+     * @return 记录列表
+     */
+    List<AioveuLaundryProcessImageVO> list(AioveuLaundryProcessImageQuery query);
 
 }

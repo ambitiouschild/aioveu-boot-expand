@@ -35,6 +35,31 @@
         </where>
     </select>
 
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO aioveu_laundry_process_image (
+        order_id,
+        item_id,
+        image_type,
+        image_url,
+        upload_user,
+        description,
+        create_time,
+        update_time
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.orderId},
+            #{item.itemId},
+            #{item.imageType},
+            #{item.imageUrl},
+            #{item.uploadUser},
+            #{item.description},
+            NOW(),
+            NOW()
+            )
+        </foreach>
+    </insert>
+
 </mapper>
 
         <!-- 模糊查询 ,查询条件改为精确查询而非模糊查询 -->
