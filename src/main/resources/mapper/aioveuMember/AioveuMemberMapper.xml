@@ -33,12 +33,34 @@
                 AND phone LIKE CONCAT('%', #{queryParams.phone}, '%')
             </if>
             <if test="queryParams.levelId != null">
-                AND level_id LIKE CONCAT('%', #{queryParams.levelId}, '%')
+                AND level_id = #{queryParams.levelId}
             </if>
             <if test="queryParams.status != null">
-                AND status LIKE CONCAT('%', #{queryParams.status}, '%')
+                AND status = #{queryParams.status}
             </if>
         </where>
     </select>
 
 </mapper>
+
+
+<!--<where>-->
+<!--<if test="queryParams.id != null">-->
+<!--    AND id LIKE CONCAT('%', #{queryParams.id}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.memberNo != null and queryParams.memberNo != ''">-->
+<!--    AND member_no LIKE CONCAT('%', #{queryParams.memberNo}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.name != null and queryParams.name != ''">-->
+<!--    AND name LIKE CONCAT('%', #{queryParams.name}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.phone != null and queryParams.phone != ''">-->
+<!--    AND phone LIKE CONCAT('%', #{queryParams.phone}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.levelId != null">-->
+<!--    AND level_id LIKE CONCAT('%', #{queryParams.levelId}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.status != null">-->
+<!--    AND status LIKE CONCAT('%', #{queryParams.status}, '%')-->
+<!--</if>-->
+<!--</where>-->

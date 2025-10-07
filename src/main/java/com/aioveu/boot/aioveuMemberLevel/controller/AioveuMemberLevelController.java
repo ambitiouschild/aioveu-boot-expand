@@ -1,5 +1,6 @@
 package com.aioveu.boot.aioveuMemberLevel.controller;
 
+import com.aioveu.boot.aioveuMemberLevel.model.vo.AioveuMemberLevelOptionsVO;
 import com.aioveu.boot.aioveuMemberLevel.service.AioveuMemberLevelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 /**
  * 会员等级前端控制层
@@ -77,5 +80,18 @@ public class AioveuMemberLevelController  {
     ) {
         boolean result = aioveuMemberLevelService.deleteAioveuMemberLevels(ids);
         return Result.judge(result);
+    }
+
+    /**
+     * 获取列表（用于下拉选择框）
+     * @return 选项列表
+     */
+    @Operation(summary = "获取会员等级列表（用于下拉选择框）")
+    @GetMapping("/options")
+    public Result<List<AioveuMemberLevelOptionsVO>> getAllMemberLevelsOptions() {
+
+        List<AioveuMemberLevelOptionsVO> memberLevels  = aioveuMemberLevelService.getAllMemberLevelsOptions();
+
+        return Result.success(memberLevels);
     }
 }

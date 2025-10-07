@@ -136,6 +136,29 @@ public class NoGenerator {
         return "LC"  + dateStr + String.format("%04d", seq);
     }
 
+    /**
+     * 生成会员卡号（时间戳+序列号）
+     * 格式：LC + yyyy + 4位序列号
+     * 示例：M20250001
+     */
+    public String generateMemberNo() {
+        // 获取当前日期字符串
+        String dateStr = new SimpleDateFormat("yyyy").format(new Date());
+        // 获取或创建序列号计数器
+        AtomicInteger sequence = SEQUENCE_MAP.computeIfAbsent(dateStr, k -> new AtomicInteger(0));
+        // 递增序列号
+        int seq = sequence.incrementAndGet();
+        // 处理溢出（超过999999）
+        if (seq > 999999) {
+            sequence.set(1);
+            seq = 1;
+        }
+        // 正确格式化序列号
+        return "M"  + dateStr + String.format("%04d", seq);
+    }
+
+
+
 
 
     /**

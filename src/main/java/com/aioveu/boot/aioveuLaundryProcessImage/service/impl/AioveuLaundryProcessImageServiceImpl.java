@@ -1,6 +1,11 @@
 package com.aioveu.boot.aioveuLaundryProcessImage.service.impl;
 
+import com.aioveu.boot.aioveuCommon.util.AioveuNameSetter.AioveuNameSetter;
+import com.aioveu.boot.aioveuEmployee.service.AioveuEmployeeService;
+import com.aioveu.boot.aioveuLaundryOrder.service.AioveuLaundryOrderService;
+import com.aioveu.boot.aioveuLaundryOrderItem.service.AioveuLaundryOrderItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -32,6 +37,13 @@ public class AioveuLaundryProcessImageServiceImpl extends ServiceImpl<AioveuLaun
 
     private final AioveuLaundryProcessImageConverter aioveuLaundryProcessImageConverter;
 
+    @Autowired
+    private  AioveuLaundryOrderService aioveuLaundryOrderService;
+    @Autowired
+    private  AioveuLaundryOrderItemService aioveuLaundryOrderItemService;
+    @Autowired
+    private  AioveuEmployeeService aioveuEmployeeService;
+
     /**
     * 获取洗衣流程图片记录分页列表
     *
@@ -44,6 +56,28 @@ public class AioveuLaundryProcessImageServiceImpl extends ServiceImpl<AioveuLaun
                 new Page<>(queryParams.getPageNum(), queryParams.getPageSize()),
                 queryParams
         );
+
+        AioveuNameSetter.setNamesByMaps(
+                pageVO.getRecords(),             //1.VO列表,pageVO.getRecords(),List<T> vos，应该是List<VO>列表类型而不是单个对象
+                AioveuLaundryProcessImageVO::getOrderId,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
+                aioveuLaundryOrderService::getLaundryOrderNoMap,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
+                AioveuLaundryProcessImageVO::setOrderNo             // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
+        );
+
+        AioveuNameSetter.setNamesByMaps(
+                pageVO.getRecords(),             //1.VO列表,pageVO.getRecords(),List<T> vos，应该是List<VO>列表类型而不是单个对象
+                AioveuLaundryProcessImageVO::getItemId,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
+                aioveuLaundryOrderItemService::getItemProblemDescMap,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
+                AioveuLaundryProcessImageVO::setProblemDesc            // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
+        );
+
+        AioveuNameSetter.setNamesByIds(
+                pageVO.getRecords(),             //1.VO列表,pageVO.getRecords(),List<T> vos，应该是List<VO>列表类型而不是单个对象
+                AioveuLaundryProcessImageVO::getUploadUser,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
+                aioveuEmployeeService::getEmployeeMapByIds,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
+                AioveuLaundryProcessImageVO::setUploadUserName           // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
+        );
+
         return pageVO;
     }
     

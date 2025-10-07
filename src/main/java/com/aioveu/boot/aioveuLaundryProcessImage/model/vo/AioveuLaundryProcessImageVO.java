@@ -26,14 +26,29 @@ public class AioveuLaundryProcessImageVO implements Serializable {
     private Long id;
     @Schema(description = "订单ID")
     private Long orderId;
+
+    @Schema(description = "订单号")
+    private String orderNo;
+
     @Schema(description = "衣物明细ID")
     private Long itemId;
+
+    @Schema(description = "问题描述")
+    private String problemDesc;
+
+
+
+
     @Schema(description = "图片类型 1-收衣时-receive,2-洗涤中-washing,3-烘干中-drying,4-熨烫中-ironing,5-完成时-finish,6-问题衣物-problem,7-质检时-quality_check,8-交付时-delivery")
     private Integer imageType;
     @Schema(description = "图片路径")
     private String imageUrl;
     @Schema(description = "上传人ID")
     private Long uploadUser;
+
+    @Schema(description = "上传人姓名")
+    private String uploadUserName;
+
     @Schema(description = "图片描述")
     private String description;
     @Schema(description = "创建时间")

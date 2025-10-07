@@ -2,6 +2,8 @@ package com.aioveu.boot.aioveuMemberRechargeRecord.service.impl;
 
 import com.aioveu.boot.aioveuCommon.util.AioveuNameSetter.AioveuNameSetter;
 import com.aioveu.boot.aioveuCommon.util.NumberGenerator.NoGenerator;
+import com.aioveu.boot.aioveuEmployee.service.AioveuEmployeeService;
+import com.aioveu.boot.aioveuLaundryProcessImage.model.vo.AioveuLaundryProcessImageVO;
 import com.aioveu.boot.aioveuMember.service.AioveuMemberService;
 import com.aioveu.boot.aioveuMemberAccount.model.entity.AioveuMemberAccount;
 import com.aioveu.boot.aioveuMemberAccount.model.vo.AioveuMemberAccountVO;
@@ -61,6 +63,8 @@ public class AioveuMemberRechargeRecordServiceImpl extends ServiceImpl<AioveuMem
 
     @Autowired
     private AioveuMemberService aioveuMemberService;
+    @Autowired
+    private AioveuEmployeeService aioveuEmployeeService;
 
     /**
     * 获取会员充值记录分页列表
@@ -87,6 +91,13 @@ public class AioveuMemberRechargeRecordServiceImpl extends ServiceImpl<AioveuMem
                 AioveuMemberRechargeRecordVO::getMemberId,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
                 aioveuMemberService::getMemberNameMap,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
                 AioveuMemberRechargeRecordVO::setName             // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
+        );
+
+        AioveuNameSetter.setNamesByIds(
+                pageVO.getRecords(),             //1.VO列表,pageVO.getRecords(),List<T> vos，应该是List<VO>列表类型而不是单个对象
+                AioveuMemberRechargeRecordVO::getOperatorId,           // 2.获取列表所有ID,Function<T, K> idGetter, 返回Long
+                aioveuEmployeeService::getEmployeeMapByIds,      // 3.批量查询列表名称信息,NameService<K> nameService,接受List<Long>，返回Map<Long, String>
+                AioveuMemberRechargeRecordVO::setOperatorName          // 4设置列表名称,NameSetter<T> nameSetter, 接受VO和String
         );
 
         return pageVO;

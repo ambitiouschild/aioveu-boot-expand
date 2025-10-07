@@ -4,6 +4,7 @@ import com.aioveu.boot.aioveuCommon.util.AioveuEntityUniqueValidator.AioveuEntit
 import com.aioveu.boot.aioveuCommon.util.AioveuNameSetter.AioveuNameSetter;
 import com.aioveu.boot.aioveuLaundryClothingType.service.AioveuLaundryClothingTypeService;
 import com.aioveu.boot.aioveuLaundryOrder.service.AioveuLaundryOrderService;
+import com.aioveu.boot.aioveuLaundryOrderItem.model.vo.AioveuLaundryOrderItemOption;
 import com.aioveu.boot.aioveuMemberAccount.model.entity.AioveuMemberAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import com.aioveu.boot.aioveuLaundryOrderItem.converter.AioveuLaundryOrderItemCo
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.lang.Assert;
@@ -136,6 +138,47 @@ public class AioveuLaundryOrderItemServiceImpl extends ServiceImpl<AioveuLaundry
                 .map(Long::parseLong)
                 .toList();
         return this.removeByIds(idList);
+    }
+
+    /**
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter  无参数
+     */
+    @Override
+    public Map<Long, String> getItemProblemDescMap() {
+
+
+        // 1.使用 LambdaQueryWrapper，编译时安全
+        List<AioveuLaundryOrderItem> items = lambdaQuery()
+                .select(AioveuLaundryOrderItem::getId, AioveuLaundryOrderItem::getProblemDesc)
+                .list();
+
+        // 2.转换为Map: key=ID, value=名称
+        return items.stream()
+                .collect(Collectors.toMap(
+                        AioveuLaundryOrderItem::getId,
+                        AioveuLaundryOrderItem::getProblemDesc
+                ));
+    }
+
+    /**
+     * 获取选项列表（用于下拉选择框）
+     *
+     * @return 选项列表
+     */
+    @Override
+    public List<AioveuLaundryOrderItemOption> getAllLaundryOrderItemOptions() {
+
+        // 1.使用 LambdaQueryWrapper，编译时安全
+        List<AioveuLaundryOrderItem> items = lambdaQuery()
+                .select(AioveuLaundryOrderItem::getId, AioveuLaundryOrderItem::getProblemDesc)
+                .list();
+
+        // 2.转换为选项对象
+        List<AioveuLaundryOrderItemOption>  itemOptionVO  = items.stream()
+                .map(item -> new AioveuLaundryOrderItemOption(item.getId(), item.getProblemDesc()))
+                .collect(Collectors.toList());
+
+        return itemOptionVO;
     }
 
 }

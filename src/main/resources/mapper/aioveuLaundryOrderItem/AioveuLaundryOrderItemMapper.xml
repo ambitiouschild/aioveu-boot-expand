@@ -21,24 +21,45 @@
             aioveu_laundry_order_item
         <where>
             <if test="queryParams.id != null">
-                AND id LIKE CONCAT('%', #{queryParams.id}, '%')
+                AND id = #{queryParams.id}
             </if>
             <if test="queryParams.orderId != null">
-                AND order_id LIKE CONCAT('%', #{queryParams.orderId}, '%')
+                AND order_id = #{queryParams.orderId}
             </if>
             <if test="queryParams.clothingTypeId != null">
-                AND clothing_type_id LIKE CONCAT('%', #{queryParams.clothingTypeId}, '%')
+                AND clothing_type_id = #{queryParams.clothingTypeId}
             </if>
             <if test="queryParams.customType != null and queryParams.customType != ''">
-                AND custom_type LIKE CONCAT('%', #{queryParams.customType}, '%')
+                AND custom_type = #{queryParams.customType}
             </if>
             <if test="queryParams.processStatus != null">
-                AND process_status LIKE CONCAT('%', #{queryParams.processStatus}, '%')
+                AND process_status = #{queryParams.processStatus}
             </if>
             <if test="queryParams.specialInstruction != null and queryParams.specialInstruction != ''">
-                AND special_instruction LIKE CONCAT('%', #{queryParams.specialInstruction}, '%')
+                AND special_instruction = #{queryParams.specialInstruction}
             </if>
         </where>
     </select>
 
 </mapper>
+        <!-- 模糊查询 ,查询条件改为精确查询而非模糊查询 -->
+<!--<where>-->
+<!--<if test="queryParams.id != null">-->
+<!--    AND id LIKE CONCAT('%', #{queryParams.id}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.orderId != null">-->
+<!--    AND order_id LIKE CONCAT('%', #{queryParams.orderId}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.clothingTypeId != null">-->
+<!--    AND clothing_type_id LIKE CONCAT('%', #{queryParams.clothingTypeId}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.customType != null and queryParams.customType != ''">-->
+<!--    AND custom_type LIKE CONCAT('%', #{queryParams.customType}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.processStatus != null">-->
+<!--    AND process_status LIKE CONCAT('%', #{queryParams.processStatus}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.specialInstruction != null and queryParams.specialInstruction != ''">-->
+<!--    AND special_instruction LIKE CONCAT('%', #{queryParams.specialInstruction}, '%')-->
+<!--</if>-->
+<!--</where>-->

@@ -21,12 +21,24 @@
                 AND id LIKE CONCAT('%', #{queryParams.id}, '%')
             </if>
             <if test="queryParams.memberId != null">
-                AND member_id LIKE CONCAT('%', #{queryParams.memberId}, '%')
+                AND member_id = #{queryParams.memberId}
             </if>
             <if test="queryParams.status != null">
-                AND status LIKE CONCAT('%', #{queryParams.status}, '%')
+                AND status = #{queryParams.status}
             </if>
         </where>
     </select>
 
 </mapper>
+
+<!--<where>-->
+<!--<if test="queryParams.id != null">-->
+<!--    AND id LIKE CONCAT('%', #{queryParams.id}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.memberId != null">-->
+<!--    AND member_id LIKE CONCAT('%', #{queryParams.memberId}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.status != null">-->
+<!--    AND status LIKE CONCAT('%', #{queryParams.status}, '%')-->
+<!--</if>-->
+<!--</where>-->

@@ -27,12 +27,28 @@
                 AND recharge_no LIKE CONCAT('%', #{queryParams.rechargeNo}, '%')
             </if>
             <if test="queryParams.memberId != null">
-                AND member_id LIKE CONCAT('%', #{queryParams.memberId}, '%')
+                AND member_id = #{queryParams.memberId}
             </if>
             <if test="queryParams.paymentType != null">
-                AND payment_type LIKE CONCAT('%', #{queryParams.paymentType}, '%')
+                AND payment_type = #{queryParams.paymentType}
             </if>
         </where>
     </select>
 
 </mapper>
+
+
+<!--<where>-->
+<!--<if test="queryParams.id != null">-->
+<!--    AND id LIKE CONCAT('%', #{queryParams.id}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.rechargeNo != null and queryParams.rechargeNo != ''">-->
+<!--    AND recharge_no LIKE CONCAT('%', #{queryParams.rechargeNo}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.memberId != null">-->
+<!--    AND member_id LIKE CONCAT('%', #{queryParams.memberId}, '%')-->
+<!--</if>-->
+<!--<if test="queryParams.paymentType != null">-->
+<!--    AND payment_type LIKE CONCAT('%', #{queryParams.paymentType}, '%')-->
+<!--</if>-->
+<!--</where>-->

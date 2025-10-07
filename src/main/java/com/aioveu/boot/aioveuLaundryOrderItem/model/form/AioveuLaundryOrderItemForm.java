@@ -40,6 +40,7 @@ public class AioveuLaundryOrderItemForm implements Serializable {
     private String customType;
 
     @Schema(description = "问题描述")
+    @NotBlank(message = "问题描述不能为空")
     @Size(max=65535, message="问题描述长度不能超过65535个字符")
     private String problemDesc;
 

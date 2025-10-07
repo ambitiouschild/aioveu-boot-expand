@@ -42,6 +42,8 @@ public class AioveuLaundryOrderItemVO implements Serializable {
     private String customType;
     @Schema(description = "问题描述")
     private String problemDesc;
+
+
     @Schema(description = "价格")
     private BigDecimal price;
     @Schema(description = "处理状态 1-待处理-pending,2-洗涤中-washing,3-烘干中-drying,4-熨烫中-ironing,5-质检中-quality_check,6-已完成-finished,7-问题衣物-problem")

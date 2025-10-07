@@ -49,6 +49,10 @@ public class AioveuMemberRechargeRecordVO implements Serializable {
     private LocalDateTime rechargeTime;
     @Schema(description = "操作员ID")
     private Long operatorId;
+
+    @Schema(description = "操作员")
+    private String operatorName;
+
     @Schema(description = "状态1-pending待定,2-success成功,3-failed失败")
     private Integer status;
     @Schema(description = "备注")

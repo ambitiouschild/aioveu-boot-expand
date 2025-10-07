@@ -1,8 +1,10 @@
 package com.aioveu.boot.aioveuMember.service.impl;
 
 import com.aioveu.boot.aioveuCommon.util.AioveuNameSetter.AioveuNameSetter;
+import com.aioveu.boot.aioveuCommon.util.NumberGenerator.NoGenerator;
 import com.aioveu.boot.aioveuMember.model.vo.AioveuMemberOptionVO;
 import com.aioveu.boot.aioveuMemberLevel.service.AioveuMemberLevelService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,10 @@ public class AioveuMemberServiceImpl extends ServiceImpl<AioveuMemberMapper, Aio
 
     @Autowired
     private AioveuMemberLevelService aioveuMemberLevelService;
+
+    // 通过依赖注入获取NoGenerator
+    @Autowired
+    private NoGenerator noGenerator;
 
     /**
     * 获取会员信息管理分页列表
@@ -93,6 +99,35 @@ public class AioveuMemberServiceImpl extends ServiceImpl<AioveuMemberMapper, Aio
      */
     @Override
     public boolean saveAioveuMember(AioveuMemberForm formData) {
+
+
+        // 1.如果单号为空，则生成
+        if (StrUtil.isBlank(formData.getMemberNo())) {
+
+            String newMemberNo = noGenerator.generateMemberNo();//单号生成器方法保持一致
+            formData.setMemberNo(newMemberNo);
+            log.info("生成的newTypeCode: " +  newMemberNo);
+
+        }
+
+        // 2.无论单号是生成的还是用户提供的，都要检查是否重复。
+        LambdaQueryWrapper<AioveuMember> wrapper = new LambdaQueryWrapper<>();
+        // 正确调用：传递 formData 参数
+        wrapper.eq(AioveuMember::getMemberNo, formData.getMemberNo());
+
+        //3.如果重复，则重新生成（如果是用户提供的，可能需要提示用户，但根据业务逻辑，这里选择重新生成）。
+        while (this.count(wrapper) > 0) {
+            // 重新生成单号
+            String againMemberNo = noGenerator.generateMemberNo();//单号生成器方法保持一致
+            formData.setMemberNo(againMemberNo);
+            log.info("生成的againMemberNo: " +  againMemberNo);
+
+            //4.重新生成后，再次检查，直到不重复为止（或者设置最大重试次数）。
+            // 更新查询条件，检查新生成的单号
+            wrapper.clear();
+            wrapper.eq(AioveuMember::getMemberNo, formData.getMemberNo());
+        }
+
         AioveuMember entity = aioveuMemberConverter.toEntity(formData);
         return this.save(entity);
     }
