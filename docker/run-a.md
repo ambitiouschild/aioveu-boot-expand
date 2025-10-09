@@ -56,7 +56,7 @@ docker images
 
 ```bash
 # 7. 部署容器
-docker compose -f ./docker-compose98.yml -p aioveu-boot up -d
+docker compose -f ./docker-compose98.yml -p aioveu-boot up -d --no-recreate
 
 ```
 

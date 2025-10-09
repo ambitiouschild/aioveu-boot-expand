@@ -136,7 +136,7 @@ oss:
   # MinIO 对象存储服务
   minio:
     # MinIO 服务地址
-    endpoint: http://localhost:9000   # 本地MinIO 服务地址  MinIO的API端口默认是9000，而Web控制台端口默认是9001
+#    endpoint: http://localhost:9000   # 本地MinIO 服务地址  MinIO的API端口默认是9000，而Web控制台端口默认是9001
     #MinIO客户端连接配置错误，检查你的MinIO配置，确保在应用程序中配置MinIO的endpoint时使用的是API端口（通常为9000），而不是Web控制台端口。
     #    endpoint: http://minio:9000   # 容器内MinIO 服务地址 http://192.168.25.21:9000    # 关键配置：替换为公网IP或域名
     #      控制台访问端口 http://139.224.209.98:9003  http://minio.aioveu.com:9003 控制台路径/ui后面必须加斜杠访问（如https://minio.aioveu.com/ui/）

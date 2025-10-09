@@ -11,6 +11,7 @@
 }
 
 
+#推送镜像==================================
 
 ```bash
 # 1. 查看云服务器上的本地镜像（找到你要推送的镜像名和标签）
@@ -19,7 +20,7 @@ docker images
 
 ```bash
 # 2. 给本地镜像打远程标签（原镜像名:标签 → 远程仓库地址/用户名/镜像名:版本）
-docker tag 756a87f57763  crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.2.0
+docker tag a38b17703496  crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.3.1
 ```
 
 ```bash
@@ -36,24 +37,24 @@ docker login --username=可我不敌可爱 crpi-s90cufgtjv4fnw98.cn-shanghai.per
 
 ```bash
 # 4. 推送标签后的镜像
-docker push crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.2.1
+docker push crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.3.1
 
 ```
 
 ```bash
 # 5.本地拉取远程仓库的镜像
-docker pull crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.2.1
+docker pull crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.3.1
 ```
 
 
 ```bash
 # 6.拉取后打短标签
-docker tag crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.2.1 aioveu-boot:v1.2.1
+docker tag crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.3.1 aioveu-boot:v1.3.1
 ```
 
 ```bash
 # 7. 部署容器
-docker compose -f ./docker-compose98.yml -p aioveu-boot up -d
+docker compose -f ./docker-compose98.yml -p aioveu-boot up -d --no-recreate
 
 ```
 
@@ -62,7 +63,7 @@ docker compose -f ./docker-compose98.yml -p aioveu-boot up -d
 docker compose -p aioveu-boot logs -f
 
 ```
-
+#本地Docker==================================
 ```bash
 # 9.切换回本地上下文
 docker context use default
@@ -74,6 +75,38 @@ docker context show  # 应显示 "default"
 ```
 
 ```bash
-# 11.显示本地容器而非远程
+# 11. 查看云服务器上的本地镜像（找到你要推送的镜像名和标签）
+docker images
+```
+
+```bash
+# 12.显示本地容器而非远程
+docker ps -a 
+```
+
+#远程服务器Docker==================================
+
+
+```bash
+# 1.测试 SSH 连接
+ssh root@www.aioveu.com "docker version"
+```
+
+```bash
+# 2.切换到远程上下文
+docker context use remote
+```
+```bash
+# 3.切换远程上下文执行验证
+docker context show  # 应显示 "remote"
+```
+
+```bash
+# 4. 查看云服务器上的本地镜像（找到你要推送的镜像名和标签）
+docker images
+```
+
+```bash
+# 5.显示远程容器而非远程
 docker ps -a 
 ```

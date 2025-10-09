@@ -8,6 +8,8 @@ services:
     image: mysql:8.0.29
     container_name: aioveu-boot-mysql
     restart: unless-stopped # 重启策略：除非手动停止容器，否则自动重启
+    labels:
+      com.docker.compose.recreate: "never"
     environment:
       - TZ=Asia/Shanghai
       - LANG= en_US.UTF-8
@@ -33,6 +35,8 @@ services:
     image: redis:7.2.3
     container_name: aioveu-boot-redis
     restart: unless-stopped
+    labels:
+      com.docker.compose.recreate: "never"
     command: redis-server /etc/redis/redis.conf  # 启动 Redis 服务并添加密码为：123456，默认不开启 Redis AOF 方式持久化配置
     environment:
       - TZ=Asia/Shanghai
@@ -49,6 +53,8 @@ services:
     image: minio/minio:RELEASE.2024-07-16T23-46-41Z   #选择可编辑桶的minio镜像版本
     container_name: aioveu-boot-minio
     restart: unless-stopped
+    labels:
+      com.docker.compose.recreate: "never"
     command: server /data --console-address ":9001"
     ports:
       - 9000:9000  # API端口直接对外暴露
@@ -101,7 +107,7 @@ services:
 #      - aioveu-boot
 
   aioveu-boot:
-    image: aioveu-boot:v1.2.1
+    image: aioveu-boot:v1.3.1
     pull_policy: never  # 关键设置，即使本地已有镜像，Docker Compose 在启动时仍尝试连接远程仓库  # 仅使用本地镜像
     container_name: aioveu-boot
     #    build:
