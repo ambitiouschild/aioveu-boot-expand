@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aioveu.boot.aioveuLaundryGarmentTracking.mapper.AioveuLaundryGarmentTrackingMapper">
+
+    <!-- 获取衣物流转记录分页列表 -->
+    <select id="getAioveuLaundryGarmentTrackingPage" resultType="com.aioveu.boot.aioveuLaundryGarmentTracking.model.vo.AioveuLaundryGarmentTrackingVO">
+        SELECT
+                id,
+                garment_code,
+                operation_type,
+                operator_id,
+                location_id,
+                remark,
+                create_time,
+                update_time
+        FROM
+            aioveu_laundry_garment_tracking
+        <where>
+            <if test="queryParams.id != null">
+                AND id = #{queryParams.id}
+            </if>
+            <if test="queryParams.garmentCode != null">
+                AND garment_code = #{queryParams.garmentCode}
+            </if>
+            <if test="queryParams.operationType != null">
+                AND operation_type = #{queryParams.operationType}
+            </if>
+            <if test="queryParams.operatorId != null">
+                AND operator_id = #{queryParams.operatorId}
+            </if>
+            <if test="queryParams.locationId != null">
+                AND location_id = #{queryParams.locationId}
+            </if>
+            <if test="queryParams.remark != null and queryParams.remark != ''">
+                AND remark = #{queryParams.remark}
+            </if>
+        </where>
+    </select>
+
+</mapper>
