@@ -7,13 +7,13 @@
 ![](https://raw.gitmirror.com/youlaitech/image/main/docs/rainbow.png)
 
 <div align="center">
-  <a target="_blank" href="https://aioveu.com">🖥️ 在线预览</a> |  <a target="_blank" href="https://youlai.blog.csdn.net/article/details/145178880">📑 阅读文档</a> |  <a target="_blank" href="https://www.youlai.tech/youlai-boot">🌐 官网</a>
+  <a target="_blank" href="https://aioveu.com">🖥️ 在线预览</a> |  <a target="_blank" href="https://aioveu.com">📑 阅读文档</a> |  <a target="_blank" href="https://aioveu.com">🌐 官网</a>
 </div>
 
 
 ## 📢 项目简介
 
-基于 JDK 17、Spring Boot 3、Spring Security 6、JWT、Redis、Mybatis-Plus、Vue 3、Element-Plus 构建的前后端分离单体权限管理系统。 [Mybatis-Flex 版本](https://gitee.com/youlaiorg/youlai-boot-flex)
+基于 JDK 17、Spring Boot 3、Spring Security 6、JWT、Redis、Mybatis-Plus、Vue 3、Element-Plus 构建的前后端分离单体权限管理系统。 [Mybatis-Flex 版本](https://aioveu.com)
 
 - **🚀 开发框架**: 使用 Spring Boot 3 和 Vue 3，以及 Element-Plus 等主流技术栈，实时更新。
 
@@ -37,10 +37,10 @@
 
 | 文档名称          | 访问地址                                                                                   |
 |---------------|-------------------------------------------------------------------------------------------|
-| 在线接口文档        | [https://www.apifox.cn/apidoc](https://www.apifox.cn/apidoc/shared-195e783f-4d85-4235-a038-eec696de4ea5) |
-| 项目介绍与使用指南     | [https://www.youlai.tech/youlai-boot/](https://www.youlai.tech/youlai-boot/)              |
-| 功能详解与操作手册     | [https://youlai.blog.csdn.net/article/details/145178880](https://youlai.blog.csdn.net/article/details/145178880) |
-| 新手入门指南(项目0到1) | [https://youlai.blog.csdn.net/article/details/145177011](https://youlai.blog.csdn.net/article/details/145177011) |
+| 在线接口文档        | [https://www.apifox.cn/apidoc](88ejs31yeg.apifox.cn) |
+| 项目介绍与使用指南     | [https://aioveu.com](https://aioveu.com)              |
+| 功能详解与操作手册     | [https://aioveu.com](https://aioveu.com) |
+| 新手入门指南(项目0到1) | [https://aioveu.com](https://aioveu.com) |
 
 
 ## 📁 项目目录
@@ -109,7 +109,7 @@ aioveu-boot
 
 ## 🚀 项目启动
 
-📚 完整流程参考: [项目启动](https://www.youlai.tech/youlai-boot/1.%E9%A1%B9%E7%9B%AE%E5%90%AF%E5%8A%A8/)
+📚 完整流程参考: [项目启动](https://aioveu.com)
 
 1. **克隆项目**
 
@@ -134,7 +134,7 @@ aioveu-boot
 
 ## 🚀 项目部署
 
-参考官方文档: [项目部署指南](https://www.youlai.tech/youlai-boot/5.%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2/)
+参考官方文档: [项目部署指南](https://aioveu.com)
 
 
 ## ✅ 项目统计
