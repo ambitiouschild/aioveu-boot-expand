@@ -105,3 +105,21 @@ INSERT INTO `aioveu_laundry_order_item` (
 -- ALTER TABLE `aioveu_laundry_order_item`
 -- DROP INDEX `idx_clothing_type`,
 -- ADD KEY `idx_clothing_type_id` (`clothing_type_id`);
+
+ALTER TABLE `aioveu_laundry_order_item`
+    ADD COLUMN current_status ENUM(
+        'RECEIVED',          -- 门店收衣
+        'TO_FACTORY',         -- 送厂途中
+        'FACTORY_IN',         -- 工厂入库
+        'WASHING',            -- 清洗中
+        'FACTORY_OUT',        -- 工厂出库
+        'STORE_IN',           -- 门店入库
+        'ON_HANGER',          -- 门店上挂
+        'RETURNED',           -- 已送回
+        'RE_WASHING'          -- 返洗中
+        ) DEFAULT 'RECEIVED' COMMENT '当前状态';
+
+
+
+ALTER TABLE `aioveu_laundry_order_item`
+    ADD COLUMN current_status TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '当前状态 ';
