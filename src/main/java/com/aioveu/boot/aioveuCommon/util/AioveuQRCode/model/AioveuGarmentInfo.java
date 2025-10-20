@@ -48,11 +48,23 @@ public class AioveuGarmentInfo {
     private int processStatus;
 
 
+
+    private String material;
+    private String washingInstructions;  // 洗涤说明
+    private String countryOfOrigin;  // 原产国
+    private String brand;
+    private String size;
+    private String color;
+
     // 衣物类型信息
     private String garmentType;
     private int category;
     private BigDecimal basePrice;
     private Integer processingTime;
+
+
+
+
 
 
     // 订单信息

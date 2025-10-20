@@ -44,13 +44,13 @@ public class AioveuLaundryGarmentTrackingForm implements Serializable {
     @Size(max=255, message="备注长度不能超过255个字符")
     private String remark;
 
-    @Schema(description = "创建时间")
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
-
-    @Schema(description = "更新时间")
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updateTime;
+//    @Schema(description = "创建时间")
+//    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+//    private LocalDateTime createTime;
+//
+//    @Schema(description = "更新时间")
+//    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+//    private LocalDateTime updateTime;
 
 
 }

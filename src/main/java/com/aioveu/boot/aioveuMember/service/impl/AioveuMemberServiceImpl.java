@@ -20,13 +20,13 @@ import com.aioveu.boot.aioveuMember.model.query.AioveuMemberQuery;
 import com.aioveu.boot.aioveuMember.model.vo.AioveuMemberVO;
 import com.aioveu.boot.aioveuMember.converter.AioveuMemberConverter;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 会员信息管理服务实现类
@@ -240,6 +240,31 @@ public class AioveuMemberServiceImpl extends ServiceImpl<AioveuMemberMapper, Aio
 
         return aioveuMemberOptionVO;
 
+    }
+
+
+
+    /**
+     * 批量查询会员信息
+     */
+    @Override
+    public Map<Long, AioveuMember> getMembersByIds(Set<Long> memberIds) {
+        if (CollectionUtils.isEmpty(memberIds)) {
+            return Collections.emptyMap();
+        }
+
+        LambdaQueryWrapper<AioveuMember> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(AioveuMember::getId, memberIds)
+                .select(
+                        AioveuMember::getId,
+                        AioveuMember::getMemberNo,
+                        AioveuMember::getName,
+                        AioveuMember::getPhone
+                );
+
+        List<AioveuMember> members = this.list(wrapper);
+        return members.stream()
+                .collect(Collectors.toMap(AioveuMember::getId, Function.identity()));
     }
 
 }

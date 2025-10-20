@@ -24,14 +24,31 @@ public class AioveuLaundryGarmentTrackingVO implements Serializable {
 
     @Schema(description = "衣物流转记录ID")
     private Long id;
-    @Schema(description = "衣物编码")
+    @Schema(description = "衣物编码ID")
     private Long garmentCode;
+
+
+    @Schema(description = "衣物编码编号")
+    private String garmentCodeName;
+
     @Schema(description = "操作类型,0-送厂清洗-SEND_FACTORY,1-工厂入库-FACTORY_IN,2-工厂出库-FACTORY_OUT,3-门店入库-STORE_IN,4-门店上挂-STORE_HANG,5-门店出库-STORE_OUT,6-返洗开始-RE_WASH_START")
     private Integer operationType;
+
+
     @Schema(description = "操作人ID")
     private Long operatorId;
+
+    @Schema(description = "操作人")
+    private String operatorName;
+
+
     @Schema(description = "位置ID（仓库/门店）")
     private Long locationId;
+
+    @Schema(description = "位置（仓库/门店）")
+    private String locationName;
+
+
     @Schema(description = "备注")
     private String remark;
     @Schema(description = "创建时间")

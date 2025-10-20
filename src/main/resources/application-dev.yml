@@ -129,6 +129,32 @@ security:
     - /webjars/**
     - /favicon.ico
 
+# Thymeleaf 配置
+#  thymeleaf：
+#    cache：false # 开发时禁用缓存
+#    prefix：classpath:/templates/
+#    suffix：.html
+#    mode：HTML
+#    encoding：UTF-8
+
+
+# 二维码存储配置
+lss:
+  # OSS 类型 (目前支持aliyun、minio、local)
+  type: minio
+  # MinIO 对象存储服务
+  minio:
+    # MinIO 服务地址
+    endpoint: http://localhost:9000   # 本地MinIO 服务地址  MinIO的API端口默认是9000，而Web控制台端口默认是9001
+    # 访问凭据
+    access-key: minioaioveu
+    # 凭据密钥
+    secret-key: minioaioveu
+    # 存储桶名称
+    bucket-name: aioveu
+    custom-domain: http://localhost:9000
+
+
 # 文件存储配置
 oss:
   # OSS 类型 (目前支持aliyun、minio、local)

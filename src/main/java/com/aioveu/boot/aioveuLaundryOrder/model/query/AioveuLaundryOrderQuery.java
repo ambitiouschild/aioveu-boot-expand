@@ -31,4 +31,10 @@ public class AioveuLaundryOrderQuery extends BasePageQuery {
     private Integer status;
     @Schema(description = "支付状态 1-未支付-unpaid,2-部分支付-partial,3-已支付-paid,4-未支付-refunded")
     private Integer paymentStatus;
+
+    /**
+     * 支付方式ID
+     */
+    @Schema(description = "支付方式")
+    private Integer paymentMethodId;
 }

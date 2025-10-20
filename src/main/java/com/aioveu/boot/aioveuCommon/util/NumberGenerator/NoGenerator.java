@@ -1,12 +1,13 @@
 package com.aioveu.boot.aioveuCommon.util.NumberGenerator;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.catalina.core.ApplicationContext;
+
+import com.aioveu.boot.aioveuCommon.util.AioveuQRCode.model.GarmentCodeResult;
+import com.aioveu.boot.aioveuCommon.util.AioveuQRCode.service.AioveuQRCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -25,9 +26,11 @@ import static org.hibernate.validator.internal.util.Contracts.assertTrue;
 @Component // 添加这个注解 确保NoGenerator类被声明为Spring Bean
 public class NoGenerator {
 
-    // 声明并初始化 SEQUENCE_MAP
-    private static final Map<String, AtomicInteger> SEQUENCE_MAP = new ConcurrentHashMap<>();
+    // 声明并初始化 SEQUENCE_MAP  // 存储每日序列号的映射（日期+类型 -> 序列号）
+    private static final ConcurrentHashMap<String, AtomicInteger> SEQUENCE_MAP = new ConcurrentHashMap<>();
 
+    @Autowired
+    private AioveuQRCodeService aioveuQRCodeService;
 
         /**
      * 生成交易流水号
@@ -157,8 +160,69 @@ public class NoGenerator {
         return "M"  + dateStr + String.format("%04d", seq);
     }
 
+    /**
+     * 生成衣物唯一二维码编码
+     * 格式：GAR-[衣物类型代码]-[日期]-[序列号]-[随机后缀]
+     * 示例：GAR-SHIRT-20251003-0001-5A3B
+     *
+     * 说明：
+     * - GAR: 固定前缀，表示Garment
+     * - 衣物类型代码: 3-5个字母的衣物类型缩写
+     * - 日期: yyyyMMdd格式
+     * - 序列号: 4位数字，每日重置
+     * - 随机后缀: 4位16进制数，确保唯一性
+     * @return 包含编码和二维码URL的对象
+     * 总长度: 3 + 1 + 3-5 + 1 + 8 + 1 + 4 + 1 + 4 = 25-27字符
+     */
+    public GarmentCodeResult generateGarmentQRCode() {
+
+//        // 验证衣物类型代码
+//        if (garmentTypeCode == null || garmentTypeCode.length() < 3 || garmentTypeCode.length() > 5) {
+//            throw new IllegalArgumentException("衣物类型代码必须是3-5个字母");
+//        }
+
+        // 获取当前日期字符串
+
+        String dateStr = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        // 获取或创建序列号计数器
+        AtomicInteger sequence = SEQUENCE_MAP.computeIfAbsent(dateStr, k -> new AtomicInteger(0));
+
+        // 递增序列号
+        int seq = sequence.incrementAndGet();
+
+        // 处理溢出（超过999999）
+        if (seq > 999999) {
+            sequence.set(1);
+            seq = 1;
+        }
+
+        // 生成4位随机后缀（16进制）
+        String randomSuffix = generateRandomSuffix();
+
+        // 格式化编码
+        String garmentCode = String.format("GAR-%s-%04d-%s",dateStr, seq, randomSuffix);
+
+        // 生成二维码并上传到MinIO
+        String qrCodeUrl = aioveuQRCodeService.generateAndUploadQRCode(garmentCode, 300);
+
+        // 格式化编码
+        return new GarmentCodeResult(garmentCode, qrCodeUrl);
+    }
 
 
+
+
+    /**
+     * 生成4位随机后缀（16进制）
+     */
+    private String generateRandomSuffix() {
+        // 使用UUID生成随机部分
+        UUID uuid = UUID.randomUUID();
+        long mostSigBits = uuid.getMostSignificantBits();
+
+        // 取最后16位（4个16进制字符）
+        return String.format("%04X", mostSigBits & 0xFFFF);
+    }
 
 
     /**
@@ -174,6 +238,27 @@ public class NoGenerator {
 
         // 初始化今天的序列号（如果不存在）
         SEQUENCE_MAP.putIfAbsent(today, new AtomicInteger(0));
+    }
+
+    /**
+     * 生成生成打印任务ID（时间戳+序列号）
+     * 格式：PRINT-[日期]-[序列号]-[随机后缀]
+     * 示例：PRINT-20251003-0001-5A3B
+     */
+    public String generatePrintId() {
+        // 获取当前日期字符串
+        String dateStr = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        // 获取或创建序列号计数器
+        AtomicInteger sequence = SEQUENCE_MAP.computeIfAbsent(dateStr, k -> new AtomicInteger(0));
+        // 递增序列号
+        int seq = sequence.incrementAndGet();
+        // 处理溢出（超过999999）
+        if (seq > 999999) {
+            sequence.set(1);
+            seq = 1;
+        }
+        // 正确格式化序列号
+        return "PRINT"  + dateStr + String.format("%04d", seq);
     }
 }
 

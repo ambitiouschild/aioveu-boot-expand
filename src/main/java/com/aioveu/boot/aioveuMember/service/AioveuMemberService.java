@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 会员信息管理服务类
@@ -82,6 +83,12 @@ public interface AioveuMemberService extends IService<AioveuMember> {
      * @return 会员卡号选项列表
      */
     List<AioveuMemberOptionVO> getAllMemberNoOptions();
+
+
+    /**
+     * 批量查询会员信息
+     */
+    Map<Long, AioveuMember> getMembersByIds(Set<Long> memberIds);
 
 
 }

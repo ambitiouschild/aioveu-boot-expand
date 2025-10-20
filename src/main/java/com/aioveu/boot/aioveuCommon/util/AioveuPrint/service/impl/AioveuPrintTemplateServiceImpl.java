@@ -1,4 +1,4 @@
-package com.aioveu.boot.aioveuCommon.util.AioveuPrint.service;
+package com.aioveu.boot.aioveuCommon.util.AioveuPrint.service.impl;
 
 import com.aioveu.boot.aioveuCommon.util.AioveuPrint.model.AivoeuPrintTemplate;
 import jakarta.annotation.PostConstruct;
@@ -44,7 +44,24 @@ public class AioveuPrintTemplateServiceImpl {
 
         log.info("初始化 {} 个打印模板", templates.size());
 
+        // 添加小票模板
+        templates.put("receipt", createReceiptTemplate());
+        log.info("添加小票模板");
+
+        // 添加水洗唛模板
+        templates.put("care_label", createStandardCareLabelTemplate());
+        log.info("添加水洗唛模板");
+
     }
+
+
+
+
+
+
+
+
+
 
     /**
      * 创建标准模板
@@ -168,6 +185,501 @@ public class AioveuPrintTemplateServiceImpl {
                 null // 标准模板没有批量模板
         );
     }
+
+
+    /**
+     * 创建小票模板
+     */
+    private AivoeuPrintTemplate createReceiptTemplate() {
+        String css = """
+            body { 
+                font-family: 'Microsoft YaHei', sans-serif; 
+                max-width: 80mm;
+                margin: 0 auto;
+                padding: 10px;
+                background: white;
+                color: #333;
+            }
+            .receipt-header {
+                text-align: center;
+                padding-bottom: 10px;
+                border-bottom: 1px dashed #ccc;
+            }
+            .shop-name {
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            .shop-info {
+                font-size: 12px;
+                margin-bottom: 5px;
+            }
+            .order-info {
+                margin: 10px 0;
+                font-size: 12px;
+            }
+            .items-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 10px 0;
+                font-size: 12px;
+            }
+            .items-table th {
+                text-align: left;
+                padding: 5px 0;
+                border-bottom: 1px dashed #ccc;
+            }
+            .items-table td {
+                padding: 5px 0;
+                border-bottom: 1px dashed #eee;
+            }
+            .item-name {
+                width: 50%;
+            }
+            .item-price, .item-quantity, .item-total {
+                width: 16.66%;
+                text-align: right;
+            }
+            .summary {
+                margin: 10px 0;
+                padding-top: 10px;
+                border-top: 1px dashed #ccc;
+                font-size: 13px;
+            }
+            .summary-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 5px;
+            }
+            .footer {
+                margin-top: 15px;
+                padding-top: 10px;
+                border-top: 1px dashed #ccc;
+                font-size: 11px;
+                text-align: center;
+                color: #666;
+            }
+            @media print {
+                body { 
+                    margin: 0;
+                    padding: 5mm;
+                }
+            }
+            """;
+
+        String singleTemplate = """
+            <div class="receipt">
+                <div class="receipt-header">
+                    <div class="shop-name">%s</div>
+                    <div class="shop-info">%s</div>
+                    <div class="shop-info">电话: %s</div>
+                </div>
+                
+                <div class="order-info">
+                    <div>订单号: %s</div>
+                    <div>时间: %s</div>
+                </div>
+                
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th class="item-name">商品</th>
+                            <th class="item-price">单价</th>
+                            <th class="item-quantity">数量</th>
+                            <th class="item-total">金额</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        %s
+                    </tbody>
+                </table>
+                
+                <div class="summary">
+                    <div class="summary-row">
+                        <span>合计:</span>
+                        <span>¥%s</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>支付方式:</span>
+                        <span>%s</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>实收:</span>
+                        <span>¥%s</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>找零:</span>
+                        <span>¥%s</span>
+                    </div>
+                </div>
+                
+                <div class="footer">
+                    <div>%s</div>
+                    <div>打印时间: %s</div>
+                    <div>谢谢惠顾，欢迎再次光临</div>
+                </div>
+            </div>
+            """;
+
+        String itemTemplate = """
+            <tr>
+                <td class="item-name">%s</td>
+                <td class="item-price">¥%s</td>
+                <td class="item-quantity">%d</td>
+                <td class="item-total">¥%s</td>
+            </tr>
+            """;
+
+        return new AivoeuPrintTemplate(
+                "receipt",
+                "小票模板",
+                css,
+                singleTemplate,
+                null,
+                itemTemplate
+        );
+    }
+
+    /**
+     * 标准洗衣店水洗唛模板
+     * 符合国际洗涤标签标准
+     */
+    private AivoeuPrintTemplate createStandardCareLabelTemplate() {
+        String css = """
+    /* 标准水洗唛样式 - 符合行业标准 */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 8px;
+        background: white;
+        line-height: 1.2;
+    }
+    
+    /* 标准水洗唛尺寸：80mm × 40mm */
+    .care-label {
+        width: 80mm;
+        height: 40mm;
+        border: 1px solid #000;
+        display: flex;
+        page-break-inside: avoid;
+        margin-bottom: 2mm;
+    }
+    
+    /* 批量打印容器 */
+    .batch-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2mm;
+        padding: 5mm;
+    }
+    
+    /* 二维码区域 - 左侧30% */
+    .qr-section {
+        width: 25%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-right: 1px solid #000;
+        padding: 1mm;
+        background: #f8f8f8;
+    }
+    
+    .qr-code {
+        width: 100%;
+        max-width: 20mm; /* 限制最大宽度 */
+        height: auto;
+        object-fit: contain;
+    }
+    
+    /* 信息区域 - 右侧70% */
+    .info-section {
+        width: 75%; /* 从60%增加到75% */
+        padding: 1.5mm;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* 顶部信息行 */
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1mm;
+        border-bottom: 1px dashed #ccc;
+        padding-bottom: 0.5mm;
+    }
+    
+    .garment-code {
+        font-weight: bold;
+        font-size: 9px;
+    }
+    
+    .brand {
+        font-size: 8px;
+        color: #666;
+    }
+    
+    /* 材质和产地行 */
+    .material-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1mm;
+        font-size: 7px;
+    }
+    
+    /* 洗涤符号区域 - 国际标准符号 */
+    .symbols-section {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.5mm;
+        margin: 1mm 0;
+        text-align: center;
+    }
+    
+    .symbol-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .symbol {
+        font-size: 12px;
+        margin-bottom: 0.2mm;
+    }
+    
+    .symbol-label {
+        font-size: 6px;
+        color: #666;
+    }
+    
+    /* 洗涤说明区域 */
+    .instructions-section {
+        margin-top: 0.5mm;
+        padding-top: 0.5mm;
+        border-top: 1px dashed #ccc;
+    }
+    
+    .instructions {
+        font-size: 7px;
+        line-height: 1.1;
+                max-height: 12mm; /* 限制高度 */
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+    }
+    
+    /* 底部信息 */
+    .footer {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        font-size: 6px;
+        color: #666;
+    }
+    
+    /* 打印优化 */
+    @media print {
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .care-label {
+            border: 1px solid #000;
+            margin-bottom: 2mm;
+        }
+        
+        .no-print {
+            display: none !important;
+        }
+    }
+    
+    /* 错误状态 */
+    .error {
+        color: #d00;
+        font-style: italic;
+        text-align: center;
+    }
+    
+    /* 加载状态 */
+    .loading {
+        text-align: center;
+        color: #666;
+    }
+    """;
+
+        String singleTemplate = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>标准水洗唛打印</title>
+        <style>%s</style>
+    </head>
+    <body>
+        <div class="care-label">
+            <!-- 左侧二维码区域 -->
+            <div class="qr-section">
+                <img src="%s" class="qr-code" alt="衣物二维码" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div class="error" style="display:none;">[二维码加载失败]</div>
+            </div>
+            
+            <!-- 右侧信息区域 -->
+            <div class="info-section">
+                <!-- 顶部信息 -->
+                <div class="header-row">
+                    <div class="garment-code">衣物编码: %s</div>
+                    <div class="brand">品牌: %s</div>
+                </div>
+                
+                <!-- 材质和产地 -->
+                <div class="material-row">
+                    <div>材质: %s</div>
+                    <div>产地: %s</div>
+                </div>
+                
+                <!-- 国际标准洗涤符号 -->
+                <div class="symbols-section">
+                    <div class="symbol-item">
+                        <div class="symbol">🛁</div>
+                        <div class="symbol-label">%s°C</div>
+                    </div>
+                    <div class="symbol-item">
+                        <div class="symbol">🚫</div>
+                        <div class="symbol-label">漂白</div>
+                    </div>
+                    <div class="symbol-item">
+                        <div class="symbol">♨️</div>
+                        <div class="symbol-label">熨烫</div>
+                    </div>
+                    <div class="symbol-item">
+                        <div class="symbol">🧼</div>
+                        <div class="symbol-label">干洗</div>
+                    </div>
+                    <div class="symbol-item">
+                        <div class="symbol">☀️</div>
+                        <div class="symbol-label">晾干</div>
+                    </div>
+                </div>
+                
+                <!-- 洗涤说明 -->
+                <div class="instructions-section">
+                    <div class="instructions">%s</div>
+                </div>
+                
+                <!-- 底部信息 -->
+                <div class="footer">
+                    <div>打印时间: %s</div>
+                    <div>洗衣店名称</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="no-print" style="text-align: center; margin-top: 5mm; font-size: 8px;">
+            标准水洗唛 - 单件
+        </div>
+    </body>
+    </html>
+    """;
+
+        String batchTemplate = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>标准水洗唛批量打印</title>
+        <style>%s</style>
+    </head>
+    <body>
+        <div class="batch-container">
+            %s
+        </div>
+        
+        <div class="no-print" style="text-align: center; margin-top: 5mm; font-size: 8px;">
+            打印时间: %s | 共 %d 件 | 标准水洗唛批量打印
+        </div>
+    </body>
+    </html>
+    """;
+
+        String itemTemplate = """
+    <div class="care-label">
+        <!-- 左侧二维码区域 -->
+        <div class="qr-section">
+            <img src="%s" class="qr-code" alt="衣物二维码" 
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <div class="error" style="display:none;">[二维码加载失败]</div>
+        </div>
+        
+        <!-- 右侧信息区域 -->
+        <div class="info-section">
+            <!-- 顶部信息 -->
+            <div class="header-row">
+                <div class="garment-code">衣物编码: %s</div>
+                <div class="brand">品牌: %s</div>
+            </div>
+            
+            <!-- 材质和产地 -->
+            <div class="material-row">
+                <div>材质: %s</div>
+                <div>产地: %s</div>
+            </div>
+            
+            <!-- 国际标准洗涤符号 -->
+            <div class="symbols-section">
+                <div class="symbol-item">
+                    <div class="symbol">🛁</div>
+                    <div class="symbol-label">%s°C</div>
+                </div>
+                <div class="symbol-item">
+                    <div class="symbol">🚫</div>
+                    <div class="symbol-label">漂白</div>
+                </div>
+                <div class="symbol-item">
+                    <div class="symbol">♨️</div>
+                    <div class="symbol-label">熨烫</div>
+                </div>
+                <div class="symbol-item">
+                    <div class="symbol">🧼</div>
+                    <div class="symbol-label">干洗</div>
+                </div>
+                <div class="symbol-item">
+                    <div class="symbol">☀️</div>
+                    <div class="symbol-label">晾干</div>
+                </div>
+            </div>
+            
+            <!-- 洗涤说明 -->
+            <div class="instructions-section">
+                <div class="instructions">%s</div>
+            </div>
+            
+            <!-- 底部信息 -->
+            <div class="footer">
+                <div>打印时间: %s</div>
+                <div>洗衣店名称</div>
+            </div>
+        </div>
+    </div>
+    """;
+
+        return new AivoeuPrintTemplate(
+                "standard_care_label",
+                "标准洗衣店水洗唛模板",
+                css,
+                singleTemplate,
+                batchTemplate,
+                itemTemplate
+        );
+    }
+
+
+
 
 
 

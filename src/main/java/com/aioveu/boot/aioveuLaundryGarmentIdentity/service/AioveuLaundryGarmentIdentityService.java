@@ -3,9 +3,13 @@ package com.aioveu.boot.aioveuLaundryGarmentIdentity.service;
 import com.aioveu.boot.aioveuLaundryGarmentIdentity.model.entity.AioveuLaundryGarmentIdentity;
 import com.aioveu.boot.aioveuLaundryGarmentIdentity.model.form.AioveuLaundryGarmentIdentityForm;
 import com.aioveu.boot.aioveuLaundryGarmentIdentity.model.query.AioveuLaundryGarmentIdentityQuery;
+import com.aioveu.boot.aioveuLaundryGarmentIdentity.model.vo.AioveuGarmentIdentityOptionVO;
 import com.aioveu.boot.aioveuLaundryGarmentIdentity.model.vo.AioveuLaundryGarmentIdentityVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 衣物唯一编码服务类
@@ -54,5 +58,30 @@ public interface AioveuLaundryGarmentIdentityService extends IService<AioveuLaun
      * @return 是否删除成功
      */
     boolean deleteAioveuLaundryGarmentIdentitys(String ids);
+
+
+
+
+
+
+
+    /**
+     * 批量获取映射信息（新增方法）用于AioveuNameSetter  无参数
+     */
+    Map<Long, String> getGarmentCodeMap();
+
+    /**
+     * 获取选项列表（用于下拉选择框）
+     *
+     * @return 选项列表
+     */
+    List<AioveuGarmentIdentityOptionVO> getAllGarmentIdentityOptions();
+
+
+    /**
+     * 批量查询衣物身份信息
+     */
+    List<AioveuLaundryGarmentIdentity> getGarmentIdentitiesByCodes(List<String> garmentCodes);
+
 
 }

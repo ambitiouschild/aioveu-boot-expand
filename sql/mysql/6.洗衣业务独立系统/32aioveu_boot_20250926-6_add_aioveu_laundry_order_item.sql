@@ -121,5 +121,13 @@ ALTER TABLE `aioveu_laundry_order_item`
 
 
 
-ALTER TABLE `aioveu_laundry_order_item`
-    ADD COLUMN current_status TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '当前状态 ';
+# ALTER TABLE `aioveu_laundry_order_item`
+#     ADD COLUMN current_status TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '当前状态 ';
+
+
+# 2025/10/17 0：35
+
+# use aioveu_boot;
+#
+# ALTER TABLE `aioveu_laundry_order_item`
+#     ADD COLUMN `total_order_item_desc` text COLLATE utf8mb4_general_ci COMMENT '唯一完整洗衣订单衣物明细';

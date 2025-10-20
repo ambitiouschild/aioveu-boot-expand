@@ -3,6 +3,7 @@ package com.aioveu.boot;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 
 /**
@@ -16,7 +17,8 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
  * @LastEditTime: 2025-06-11 15:52:28
 */
 
-@SpringBootApplication
+@EnableAsync  //启用异步支持
+@SpringBootApplication(scanBasePackages = "com.aioveu")
 @ConfigurationPropertiesScan // 开启配置属性绑定
 public class AioveuBootApplication {
 

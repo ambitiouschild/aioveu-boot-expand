@@ -2,8 +2,8 @@ package com.aioveu.boot.aioveuLaundryGarmentIdentity.controller;
 
 
 import com.aioveu.boot.aioveuCommon.util.AioveuPrint.model.*;
-import com.aioveu.boot.aioveuCommon.util.AioveuPrint.service.AioveuPrintServiceImpl;
-import com.aioveu.boot.aioveuCommon.util.AioveuPrint.service.AioveuPrintTemplateServiceImpl;
+import com.aioveu.boot.aioveuCommon.util.AioveuPrint.service.impl.AioveuPrintServiceImpl;
+import com.aioveu.boot.aioveuCommon.util.AioveuPrint.service.impl.AioveuPrintTemplateServiceImpl;
 import com.aioveu.boot.aioveuCommon.util.AioveuQRCode.model.AioveuGarmentInfo;
 import com.aioveu.boot.common.exception.BusinessException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,6 +46,30 @@ public class AioveuPrintController {
         return Result.success(response);
     }
 
+
+    /**
+     * 水洗唛打印接口  RECEIPT
+     */
+    @Operation(summary = "水洗唛打印接口")
+    @PostMapping("/CareLabel")
+    @PreAuthorize("@ss.hasPerm('aioveuPrint:aioveu-print:CareLabel')")
+    public Result<AioveuPrintResponse> printCareLabel(@RequestBody AioveuPrintRequest request) {
+        AioveuPrintResponse response = aioveuPrintService.print(request);
+        return Result.success(response);
+    }
+
+    /**
+     * 小票打印接口  RECEIPT
+     */
+    @Operation(summary = "小票打印接口")
+    @PostMapping("/Receipt")
+    @PreAuthorize("@ss.hasPerm('aioveuPrint:aioveu-print:Receipt')")
+    public Result<AioveuPrintResponse> printReceipt(@RequestBody AioveuPrintRequest request) {
+        AioveuPrintResponse response = aioveuPrintService.print(request);
+        return Result.success(response);
+    }
+
+
     /**
      * 批量二维码打印
      */
@@ -86,16 +110,16 @@ public class AioveuPrintController {
      */
 
     @Operation(summary = "取消打印任务")
-    @PutMapping("/cancel/{printId}")
-    @PreAuthorize("@ss.hasPerm('aioveuPrint:aioveu-print:cancel')")
+    @PutMapping("/cancel/{printId}")  //打印取消不要权限
+//    @PreAuthorize("@ss.hasPerm('aioveuPrint:aioveu-print:cancel')")
     public Result<Void> cancelPrintJob(@PathVariable String printId) {
         aioveuPrintService.cancelPrintJob(printId);
         return Result.success();
     }
 
     @Operation(summary = "执行打印任务")
-    @PostMapping("/execute/{printId}")
-    @PreAuthorize("@ss.hasPerm('aioveuPrint:aioveu-print:execute')")
+    @PostMapping("/execute/{printId}")   //打印不要权限
+//    @PreAuthorize("@ss.hasPerm('aioveuPrint:aioveu-print:execute')")
     public Result<Void> executePrint(@PathVariable String printId) {
         aioveuPrintService.executePrint(printId);
         return Result.success();

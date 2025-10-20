@@ -49,6 +49,7 @@ docker/mysql/data/
 docker/mysql/data/mysql.sock
 
 ###始终将运行时生成的临时文件（如日志文件 *.log、缓存文件、套接字文件 *.sock、数据库文件（除非是初始化脚本）、编译产物等）添加到 .gitignore。###
+docker/nginx/
 docker/minio/
 docker/nginx/logs
 docker/radis/data/
@@ -57,6 +58,9 @@ docker/nginx/conf
 docker/xxljob/
 docker/nginx/html
 docker/nginx/html
+
+docker/nginx/
+docker/nginx-h5/
 # 从 Git 索引中移除目录（但保留本地文件）
 # git rm -r --cached docker/mysql/data
 # git rm -r --cached docker/nginx/html
@@ -65,7 +69,8 @@ docker/nginx/html
 # git rm -r --cached docker/nginx/conf
 
 # git rm -r --cached docker/redis
-
+# git rm -r --cached docker/nginx/
+# git rm -r --cached docker/nginx-h5/
 # 提交这个变更
 # git commit -m "停止跟踪 docker/mysql/data 目录"
 # git commit -m "停止跟踪 docker/nginx 目录"
@@ -73,3 +78,5 @@ docker/nginx/html
 
 # 如果不需要保留本地文件（谨慎使用）
 # git rm -r --force docker/mysql/data
+
+# git commit -m "停止跟踪 docker/mysql/data 目录"

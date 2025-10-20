@@ -7,6 +7,10 @@ import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.aioveu.boot.common.base.BaseEntity;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * 洗衣订单实体对象
  *
@@ -23,7 +27,13 @@ public class AioveuLaundryOrder extends BaseEntity {
     /**
      * 订单号
      */
-    private String orderNo;
+    private String orderNo;  // 订单ID
+
+
+//    private LocalDateTime orderTime;    // 订单时间
+
+
+
     /**
      * 会员ID
      */
@@ -60,6 +70,8 @@ public class AioveuLaundryOrder extends BaseEntity {
      * 支付方式ID
      */
     private Integer paymentMethodId;
+
+
     /**
      * 收衣时间
      */
@@ -76,4 +88,12 @@ public class AioveuLaundryOrder extends BaseEntity {
      * 备注
      */
     private String remark;
+
+
+//    @Column(name = "change_amount")
+//    private double change;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "shop_id")
+//    private ShopInfo shopInfo;
 }

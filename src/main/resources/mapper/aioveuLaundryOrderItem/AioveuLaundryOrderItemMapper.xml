@@ -10,6 +10,7 @@
                 clothing_type_id,
                 custom_type,
                 problem_desc,
+                total_order_item_desc,
                 price,
                 process_status,
                 special_instruction,

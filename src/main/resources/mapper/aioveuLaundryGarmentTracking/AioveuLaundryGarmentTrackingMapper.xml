@@ -32,7 +32,7 @@
                 AND location_id = #{queryParams.locationId}
             </if>
             <if test="queryParams.remark != null and queryParams.remark != ''">
-                AND remark = #{queryParams.remark}
+                AND remark LIKE CONCAT('%', #{queryParams.remark}, '%')
             </if>
         </where>
     </select>

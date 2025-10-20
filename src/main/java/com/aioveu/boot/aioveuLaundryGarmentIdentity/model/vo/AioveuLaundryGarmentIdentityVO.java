@@ -28,6 +28,11 @@ public class AioveuLaundryGarmentIdentityVO implements Serializable {
     private String garmentCode;
     @Schema(description = "关联订单明细")
     private Long garmentOrderDetailId;
+
+    @Schema(description = "订单明细问题描述")
+    private String itemProblemDesc;
+
+
     @Schema(description = "二维码存储路径")
     private String qrCodePath;
     @Schema(description = "编码状态 1-已存在-ACTIVE 2-已收回-RETIRED 3-已丢失-LOST")

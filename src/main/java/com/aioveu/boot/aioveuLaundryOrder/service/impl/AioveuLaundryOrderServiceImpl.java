@@ -2,6 +2,7 @@ package com.aioveu.boot.aioveuLaundryOrder.service.impl;
 
 import com.aioveu.boot.aioveuCommon.util.AioveuNameSetter.AioveuNameSetter;
 import com.aioveu.boot.aioveuCommon.util.NumberGenerator.NoGenerator;
+import com.aioveu.boot.aioveuDepartment.model.entity.AioveuDepartment;
 import com.aioveu.boot.aioveuLaundryOrder.model.vo.AioveuLaundryOrderOptionVO;
 import com.aioveu.boot.aioveuMember.service.AioveuMemberService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -20,13 +21,13 @@ import com.aioveu.boot.aioveuLaundryOrder.model.query.AioveuLaundryOrderQuery;
 import com.aioveu.boot.aioveuLaundryOrder.model.vo.AioveuLaundryOrderVO;
 import com.aioveu.boot.aioveuLaundryOrder.converter.AioveuLaundryOrderConverter;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 洗衣订单服务实现类
@@ -204,5 +205,65 @@ public class AioveuLaundryOrderServiceImpl extends ServiceImpl<AioveuLaundryOrde
                         AioveuLaundryOrder::getId,
                         AioveuLaundryOrder::getOrderNo
                 ));
+    }
+
+
+    /**
+     * 批量查询订单信息
+     */
+    @Override
+    public Map<Long, AioveuLaundryOrder> getOrdersByIds(Set<Long> orderIds) {
+        if (CollectionUtils.isEmpty(orderIds)) {
+            return Collections.emptyMap();
+        }
+
+        LambdaQueryWrapper<AioveuLaundryOrder> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(AioveuLaundryOrder::getId, orderIds)
+                .select(
+                        AioveuLaundryOrder::getId,
+                        AioveuLaundryOrder::getOrderNo,
+                        AioveuLaundryOrder::getMemberId,
+                        AioveuLaundryOrder::getStatus,
+                        AioveuLaundryOrder::getCustomerPhone,
+                        AioveuLaundryOrder::getRemark,
+                        AioveuLaundryOrder::getCreateTime
+                );
+
+        List<AioveuLaundryOrder> orders = this.list(wrapper);
+        return orders.stream()
+                .collect(Collectors.toMap(AioveuLaundryOrder::getId, Function.identity()));
+    }
+
+
+    /**
+     * 根据订单id查询订单信息
+     */
+    @Override
+    public AioveuLaundryOrder getOrderByOrderNo(String orderNo) {
+
+        LambdaQueryWrapper<AioveuLaundryOrder> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(AioveuLaundryOrder::getOrderNo, orderNo)
+                // 指定只选择 orderNo 字段，而不是所有字段
+                // 这是一个性能优化，减少不必要的数据传输
+                .select(
+                        AioveuLaundryOrder::getId,
+                        AioveuLaundryOrder::getOrderNo,
+                        AioveuLaundryOrder::getMemberId,
+                        AioveuLaundryOrder::getCustomerName,
+                        AioveuLaundryOrder::getCustomerPhone,
+                        AioveuLaundryOrder::getStatus,
+                        AioveuLaundryOrder::getTotalAmount,
+                        AioveuLaundryOrder::getDiscountAmount,
+                        AioveuLaundryOrder::getActualAmount,
+                        AioveuLaundryOrder::getPaymentStatus,
+                        AioveuLaundryOrder::getPaymentMethodId,
+                        AioveuLaundryOrder::getCreateTime,
+                        AioveuLaundryOrder::getRemark
+                );
+
+        AioveuLaundryOrder order = this.getOne(wrapper);
+
+        return order;
+
     }
 }

@@ -286,6 +286,34 @@
             <version>2.2</version>
         </dependency>
 
+        <!-- 根据编码生成二维码图片（使用ZXing库） -->
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+
+<!--        您遇到的问题是因为控制器方法返回的是视图名称（字符串），而不是实际的视图内容。-->
+<!--        在 Spring MVC 中，当您返回一个字符串时，它会被解析为视图名称，然后由视图解析器查找对应的视图模板（如 Thymeleaf、JSP 等）。-->
+
+<!--        添加 Thymeleaf 依赖（推荐）-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+<!--        添加 Thymeleaf Java8 时间支持-->
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-java8time</artifactId>
+            <version>3.0.4.RELEASE</version>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -1,11 +1,17 @@
 package com.aioveu.boot.aioveuLaundryGarmentTracking.service;
 
+import com.aioveu.boot.aioveuLaundryGarmentIdentity.model.form.AioveuLaundryGarmentIdentityForm;
 import com.aioveu.boot.aioveuLaundryGarmentTracking.model.entity.AioveuLaundryGarmentTracking;
 import com.aioveu.boot.aioveuLaundryGarmentTracking.model.form.AioveuLaundryGarmentTrackingForm;
 import com.aioveu.boot.aioveuLaundryGarmentTracking.model.query.AioveuLaundryGarmentTrackingQuery;
 import com.aioveu.boot.aioveuLaundryGarmentTracking.model.vo.AioveuLaundryGarmentTrackingVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.awt.print.Pageable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 衣物流转记录服务类
@@ -54,5 +60,29 @@ public interface AioveuLaundryGarmentTrackingService extends IService<AioveuLaun
      * @return 是否删除成功
      */
     boolean deleteAioveuLaundryGarmentTrackings(String ids);
+
+
+    /**
+     * 获取每个衣物编码的最新记录ID
+     */
+    List<Long> getLatestTrackingIdsByCodes(List<String> garmentCodes);
+
+
+    /**
+     * 批量查询最新流转记录
+     */
+    Map<String, AioveuLaundryGarmentTracking> getLatestTrackingByCodes(List<String> garmentCodes);
+
+
+    /**
+     * 新增衣物编码后自动创建衣物流转记录
+     */
+//    boolean createInitialTrackingRecord(AioveuLaundryGarmentIdentityForm formData);
+
+
+    /*
+     * 根据二维码查找最新流转记录
+     */
+    AioveuLaundryGarmentTracking getLatestTrackingByGarmentCode(String garmentCode);
 
 }

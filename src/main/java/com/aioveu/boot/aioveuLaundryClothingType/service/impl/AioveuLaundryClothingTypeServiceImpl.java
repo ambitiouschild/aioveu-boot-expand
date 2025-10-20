@@ -18,13 +18,13 @@ import com.aioveu.boot.aioveuLaundryClothingType.model.query.AioveuLaundryClothi
 import com.aioveu.boot.aioveuLaundryClothingType.model.vo.AioveuLaundryClothingTypeVO;
 import com.aioveu.boot.aioveuLaundryClothingType.converter.AioveuLaundryClothingTypeConverter;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 衣物类型服务实现类
@@ -180,6 +180,32 @@ public class AioveuLaundryClothingTypeServiceImpl extends ServiceImpl<AioveuLaun
                         AioveuLaundryClothingType::getId,
                         AioveuLaundryClothingType::getTypeName
                 ));
+    }
+
+
+    /**
+     * 批量查询衣物类型
+     */
+    @Override
+    public Map<Long, AioveuLaundryClothingType> getClothingTypesByIds(Set<Long> clothingTypeIds) {
+        if (CollectionUtils.isEmpty(clothingTypeIds)) {
+            return Collections.emptyMap();
+        }
+
+        LambdaQueryWrapper<AioveuLaundryClothingType> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(AioveuLaundryClothingType::getId, clothingTypeIds)
+                .select(
+                        AioveuLaundryClothingType::getId,
+                        AioveuLaundryClothingType::getTypeName,
+                        AioveuLaundryClothingType::getCategory,
+                        AioveuLaundryClothingType::getBasePrice,
+                        AioveuLaundryClothingType::getProcessingTime,
+                        AioveuLaundryClothingType::getSpecialRequirements
+                );
+
+        List<AioveuLaundryClothingType> types = this.list(wrapper);
+        return types.stream()
+                .collect(Collectors.toMap(AioveuLaundryClothingType::getId, Function.identity()));
     }
 
 }

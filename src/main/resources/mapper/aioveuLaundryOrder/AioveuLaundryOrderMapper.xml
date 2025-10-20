@@ -34,6 +34,11 @@
             <if test="queryParams.memberId != null">
                 AND member_id = #{queryParams.memberId}
             </if>
+
+            <if test="queryParams.paymentMethodId != null">
+                AND payment_method_id = #{queryParams.paymentMethodId}
+            </if>
+
             <if test="queryParams.customerName != null and queryParams.customerName != ''">
                 AND customer_name = #{queryParams.customerName}
             </if>

@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 洗衣订单衣物明细服务类
@@ -71,5 +72,17 @@ public interface AioveuLaundryOrderItemService extends IService<AioveuLaundryOrd
      * @return 选项列表
      */
     List<AioveuLaundryOrderItemOption> getAllLaundryOrderItemOptions();
+
+
+    /**
+     * 批量查询订单明细
+     */
+    Map<Long, AioveuLaundryOrderItem> getOrderItemsByIds(Set<Long> orderDetailIds);
+
+
+    /**
+     * 根据订单号查询订单所有衣物明细
+     */
+    List<AioveuLaundryOrderItem> getOrderItemByOrderNo(String orderNo);
 
 }

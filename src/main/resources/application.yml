@@ -2,7 +2,7 @@ spring:
   application:
     name: aioveu-boot
   profiles:
-    active: prod
+    active: dev
   config:
     import: classpath:codegen.yml
 

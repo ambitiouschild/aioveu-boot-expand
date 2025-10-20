@@ -44,6 +44,10 @@ public class AioveuLaundryOrderItemForm implements Serializable {
     @Size(max=65535, message="问题描述长度不能超过65535个字符")
     private String problemDesc;
 
+    @Schema(description = "完整订单详情")
+    @Size(max=65535, message="完整订单详情长度不能超过65535个字符")
+    private String totalOrderItemDesc;
+
     @Schema(description = "价格")
     @NotNull(message = "价格不能为空")
     private BigDecimal price;

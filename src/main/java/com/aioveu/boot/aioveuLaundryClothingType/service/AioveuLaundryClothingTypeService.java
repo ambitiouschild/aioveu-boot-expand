@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 衣物类型服务类
@@ -70,5 +71,11 @@ public interface AioveuLaundryClothingTypeService extends IService<AioveuLaundry
      * 批量获取映射信息（新增方法）用于AioveuNameSetter  // 无参，全查
      */
     Map<Long, String> getLaundryClothingTypeMap();
+
+
+    /**
+     * 批量查询衣物类型
+     */
+    Map<Long, AioveuLaundryClothingType> getClothingTypesByIds(Set<Long> clothingTypeIds);
 
 }

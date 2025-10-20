@@ -16,10 +16,13 @@ import com.aioveu.boot.aioveuMember.service.AioveuMemberService;
 import com.aioveu.boot.common.exception.BusinessException;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
  * 根据衣物编码查找衣物信息
  */
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AioveuGarmentInfoByCodeServiceImpl {
@@ -167,6 +171,106 @@ public class AioveuGarmentInfoByCodeServiceImpl {
 
     }
 
+
+    public AioveuGarmentInfo getGarmentInfoByCodeNoTracking(String garmentCode) {
+
+        // 1. 查询衣物身份信息
+        LambdaQueryWrapper<AioveuLaundryGarmentIdentity> identityWrapper = new LambdaQueryWrapper<>();
+        identityWrapper.eq(AioveuLaundryGarmentIdentity::getGarmentCode, garmentCode)
+                .select(
+                        AioveuLaundryGarmentIdentity::getId,
+                        AioveuLaundryGarmentIdentity::getGarmentCode,
+                        AioveuLaundryGarmentIdentity::getQrCodePath,
+                        AioveuLaundryGarmentIdentity::getGarmentOrderDetailId,
+                        AioveuLaundryGarmentIdentity::getStatus,
+                        AioveuLaundryGarmentIdentity::getCreateTime,
+                        AioveuLaundryGarmentIdentity::getUpdateTime
+                );
+        AioveuLaundryGarmentIdentity garmentIdentity = aioveuLaundryGarmentIdentityService.getOne(identityWrapper);
+
+//        log.info("衣物身份信息： ", garmentIdentity.getGarmentCode());
+        if (garmentIdentity == null) {
+            throw new RuntimeException("未找到衣物编码: " + garmentCode);
+        }
+
+        // 2. 查询订单明细
+        Long orderDetailId = garmentIdentity.getGarmentOrderDetailId();
+        LambdaQueryWrapper<AioveuLaundryOrderItem> itemWrapper = new LambdaQueryWrapper<>();
+        itemWrapper.eq(AioveuLaundryOrderItem::getId, orderDetailId)
+                .select(
+                        AioveuLaundryOrderItem::getOrderId,
+                        AioveuLaundryOrderItem::getClothingTypeId,
+                        AioveuLaundryOrderItem::getProblemDesc,
+                        AioveuLaundryOrderItem::getProcessStatus
+                );
+        AioveuLaundryOrderItem orderItem = aioveuLaundryOrderItemService.getOne(itemWrapper);
+
+        if (orderItem == null) {
+            throw new RuntimeException("未找到订单明细: " + orderDetailId);
+        }
+
+        // 3. 查询衣物类型
+        Long clothingTypeId = orderItem.getClothingTypeId();
+        LambdaQueryWrapper<AioveuLaundryClothingType> typeWrapper = new LambdaQueryWrapper<>();
+        typeWrapper.eq(AioveuLaundryClothingType::getId, clothingTypeId)
+                .select(
+                        AioveuLaundryClothingType::getTypeName,
+                        AioveuLaundryClothingType::getCategory,
+                        AioveuLaundryClothingType::getBasePrice,
+                        AioveuLaundryClothingType::getProcessingTime,
+                        AioveuLaundryClothingType::getSpecialRequirements
+                );
+        AioveuLaundryClothingType clothingType = aioveuLaundryClothingTypeService.getOne(typeWrapper);
+
+        if (clothingType == null) {
+            throw new RuntimeException("未找到衣物类型: " + clothingTypeId);
+        }
+
+        // 4. 查询订单信息
+        Long orderId = orderItem.getOrderId();
+        LambdaQueryWrapper<AioveuLaundryOrder> orderWrapper = new LambdaQueryWrapper<>();
+        orderWrapper.eq(AioveuLaundryOrder::getId, orderId)
+                .select(
+                        AioveuLaundryOrder::getOrderNo,
+                        AioveuLaundryOrder::getMemberId,
+                        AioveuLaundryOrder::getStatus,
+                        AioveuLaundryOrder::getCustomerPhone,
+                        AioveuLaundryOrder::getRemark,
+                        AioveuLaundryOrder::getCreateTime
+
+                );
+        AioveuLaundryOrder order = aioveuLaundryOrderService.getOne(orderWrapper);
+
+        if (order == null) {
+            throw new RuntimeException("未找到订单: " + orderId);
+        }
+
+        // 5. 查询客户信息
+        Long memberId = order.getMemberId();
+        LambdaQueryWrapper<AioveuMember> customerWrapper = new LambdaQueryWrapper<>();
+        customerWrapper.eq(AioveuMember::getId, memberId)
+                .select(
+                        AioveuMember::getMemberNo,
+                        AioveuMember::getName,
+                        AioveuMember::getPhone
+                );
+        AioveuMember member = aioveuMemberService.getOne(customerWrapper);
+
+        if (member == null) {
+            throw new RuntimeException("未找到客户: " + memberId);
+        }
+
+
+        // 7. 组装返回信息
+        return buildGarmentInfoNoTracking(
+                garmentIdentity,
+                orderItem,
+                clothingType,
+                order,
+                member
+        );
+
+    }
     /**
      * 组装衣物信息
      */
@@ -192,12 +296,15 @@ public class AioveuGarmentInfoByCodeServiceImpl {
         garmentInfo.setProblemDesc(orderItem.getProblemDesc());
         garmentInfo.setProcessStatus(orderItem.getProcessStatus());
 
+
+
         // 衣物类型信息
         garmentInfo.setGarmentType(clothingType.getTypeName());
         garmentInfo.setCategory(clothingType.getCategory());
         garmentInfo.setBasePrice(clothingType.getBasePrice());
         garmentInfo.setProcessingTime(clothingType.getProcessingTime());
-
+        //洗涤说明
+        garmentInfo.setWashingInstructions(clothingType.getSpecialRequirements());
 
         // 订单信息
         garmentInfo.setOrderNo(order.getOrderNo());
@@ -212,6 +319,55 @@ public class AioveuGarmentInfoByCodeServiceImpl {
 
         // 最新记录信息
         garmentInfo.setOperationType(tracking.getOperationType());
+
+        return garmentInfo;
+    }
+
+
+    /**
+     * 组装衣物信息
+     */
+    private AioveuGarmentInfo buildGarmentInfoNoTracking(
+            AioveuLaundryGarmentIdentity garmentIdentity,
+            AioveuLaundryOrderItem orderItem,
+            AioveuLaundryClothingType clothingType,
+            AioveuLaundryOrder order,
+            AioveuMember member
+    ) {
+        AioveuGarmentInfo garmentInfo = new AioveuGarmentInfo();
+
+        // 基础信息
+        garmentInfo.setId(garmentIdentity.getId());
+        garmentInfo.setGarmentCode(garmentIdentity.getGarmentCode());
+        garmentInfo.setQrCodePath(garmentIdentity.getQrCodePath());
+        garmentInfo.setCurrentStatus(garmentIdentity.getStatus());
+        garmentInfo.setCreateTime(garmentIdentity.getCreateTime());
+        garmentInfo.setUpdateTime(garmentIdentity.getUpdateTime());
+
+        // 订单明细信息
+        garmentInfo.setProblemDesc(orderItem.getProblemDesc());
+        garmentInfo.setProcessStatus(orderItem.getProcessStatus());
+
+
+
+        // 衣物类型信息
+        garmentInfo.setGarmentType(clothingType.getTypeName());
+        garmentInfo.setCategory(clothingType.getCategory());
+        garmentInfo.setBasePrice(clothingType.getBasePrice());
+        garmentInfo.setProcessingTime(clothingType.getProcessingTime());
+        //洗涤说明
+        garmentInfo.setWashingInstructions(clothingType.getSpecialRequirements());
+
+        // 订单信息
+        garmentInfo.setOrderNo(order.getOrderNo());
+        garmentInfo.setOrderStatus(order.getStatus());
+        garmentInfo.setCustomerPhone(order.getCustomerPhone());
+        garmentInfo.setOrderTime(order.getCreateTime());
+
+        // 客户信息
+        garmentInfo.setMemberNo(member.getMemberNo());
+        garmentInfo.setName(member.getName());
+        garmentInfo.setPhone(member.getPhone());
 
         return garmentInfo;
     }
@@ -377,6 +533,61 @@ public class AioveuGarmentInfoByCodeServiceImpl {
                 );
         AioveuLaundryGarmentIdentity garmentIdentity = aioveuLaundryGarmentIdentityService.getOne(identityWrapper);
         return garmentIdentity.getQrCodePath();
+    }
+
+    /**
+     * 获取二维码图片URL
+     */
+    public String getQrCodeImageUrl(String garmentCode, int width, int height) {
+        // 实际实现根据您的系统架构
+        // 这里是一个示例实现
+
+        // 1. 查询衣物身份信息
+        LambdaQueryWrapper<AioveuLaundryGarmentIdentity> identityWrapper = new LambdaQueryWrapper<>();
+        identityWrapper.eq(AioveuLaundryGarmentIdentity::getGarmentCode, garmentCode)
+                .select(
+                        AioveuLaundryGarmentIdentity::getGarmentCode,
+                        AioveuLaundryGarmentIdentity::getQrCodePath
+                );
+        AioveuLaundryGarmentIdentity garmentIdentity = aioveuLaundryGarmentIdentityService.getOne(identityWrapper);
+
+
+
+        // 2. 检查查询结果
+        if (garmentIdentity == null) {
+            log.warn("未找到衣物身份信息，衣物编码: {}", garmentCode);
+            return ""; // 返回空字符串或默认图片URL
+        }
+
+        // 3. 获取基础URL
+        String baseUrl = garmentIdentity.getQrCodePath();
+
+        try {
+            // 4. 使用URI构建器添加尺寸参数
+            URI uri = new URI(baseUrl);
+
+            // 构建新的URI
+            String newQuery = uri.getQuery();
+            if (newQuery == null) {
+                newQuery = "";
+            } else {
+                newQuery += "&";
+            }
+            newQuery += "width=" + width + "&height=" + height;
+
+            return new URI(uri.getScheme(), uri.getAuthority(), uri.getPath(), newQuery, uri.getFragment()).toString();
+
+        } catch (URISyntaxException e) {
+            log.error("构建二维码URL失败: {}", e.getMessage());
+
+            // 回退方案：简单拼接参数
+            if (baseUrl.contains("?")) {
+                return baseUrl + "&width=" + width + "&height=" + height;
+            } else {
+                return baseUrl + "?width=" + width + "&height=" + height;
+            }
+        }
+
     }
 
 

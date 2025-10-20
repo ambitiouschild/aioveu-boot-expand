@@ -6,6 +6,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.aioveu.boot.aioveuLaundryGarmentTracking.model.query.AioveuLaundryGarmentTrackingQuery;
 import com.aioveu.boot.aioveuLaundryGarmentTracking.model.vo.AioveuLaundryGarmentTrackingVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * 衣物流转记录Mapper接口
@@ -25,4 +29,20 @@ public interface AioveuLaundryGarmentTrackingMapper extends BaseMapper<AioveuLau
      */
     Page<AioveuLaundryGarmentTrackingVO> getAioveuLaundryGarmentTrackingPage(Page<AioveuLaundryGarmentTrackingVO> page, AioveuLaundryGarmentTrackingQuery queryParams);
 
+
+    /**
+     * 获取每个衣物编码的最新记录ID
+     */
+    @Select({
+            "<script>",
+            "SELECT MAX(id) AS id",
+            "FROM aioveu_laundry_garment_tracking",
+            "WHERE garment_code IN",
+            "  <foreach item='code' collection='garmentCodes' open='(' separator=',' close=')'>",
+            "    #{code}",
+            "  </foreach>",
+            "GROUP BY garment_code",
+            "</script>"
+    })
+    List<Long> selectLatestTrackingIdsByCodes(@Param("garmentCodes") List<String> garmentCodes);
 }

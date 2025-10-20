@@ -1,5 +1,7 @@
 package com.aioveu.boot.aioveuLaundryOrderItem.model.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
@@ -36,6 +38,12 @@ public class AioveuLaundryOrderItem extends BaseEntity {
      * 问题描述
      */
     private String problemDesc;
+
+    /**
+     * 完整订单详情
+     */
+    private String totalOrderItemDesc;
+
     /**
      * 价格
      */
