@@ -34,7 +34,7 @@ public class AioveuMemberForm implements Serializable {
     }
 
     @Schema(description = "会员卡号")
-    @NotBlank(message = "会员卡号不能为空")
+//    @NotBlank(message = "会员卡号不能为空")
     @Size(max=20, message="会员卡号长度不能超过20个字符")
     private String memberNo;
 

@@ -5,6 +5,7 @@ import com.aioveu.boot.aioveuCommon.util.NumberGenerator.NoGenerator;
 import com.aioveu.boot.aioveuMember.model.vo.AioveuMemberOptionVO;
 import com.aioveu.boot.aioveuMemberLevel.service.AioveuMemberLevelService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +57,12 @@ public class AioveuMemberServiceImpl extends ServiceImpl<AioveuMemberMapper, Aio
     */
     @Override
     public IPage<AioveuMemberVO> getAioveuMemberPage(AioveuMemberQuery queryParams) {
+
+        Page<AioveuMemberVO> page = new Page<>(queryParams.getPageNum(), queryParams.getPageSize());
+        page.addOrder(OrderItem.desc("update_time"));  // ✅ 在查询前设置排序
+
         Page<AioveuMemberVO> pageVO = this.baseMapper.getAioveuMemberPage(
-                new Page<>(queryParams.getPageNum(), queryParams.getPageSize()),
+                page,
                 queryParams
         );
 
@@ -106,7 +111,7 @@ public class AioveuMemberServiceImpl extends ServiceImpl<AioveuMemberMapper, Aio
 
             String newMemberNo = noGenerator.generateMemberNo();//单号生成器方法保持一致
             formData.setMemberNo(newMemberNo);
-            log.info("生成的newTypeCode: " +  newMemberNo);
+            log.info("生成的newMemberNo: " +  newMemberNo);
 
         }
 
