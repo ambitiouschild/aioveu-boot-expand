@@ -129,6 +129,38 @@ security:
     - /webjars/**
     - /favicon.ico
 
+#用户服务中的密码处理
+  password:
+    encoder:
+      type: bcrypt  # 可选: bcrypt, pbkdf2, scrypt, argon2, sha256, md5, delegating
+    bcrypt:
+      strength: 10   # BCrypt强度(4-31)，默认10
+    pbkdf2:
+      iterations: 310000
+      secret: "my-secret-key"  # 可选秘钥
+    argon2:
+      saltLength: 16
+      hashLength: 32
+      parallelism: 1
+      memory: 4096    # 内存使用(KB)
+      iterations: 3
+
+# 密码策略
+password:
+  policy:
+    min-length: 8
+    max-length: 32
+    require-uppercase: true
+    require-lowercase: true
+    require-digit: true
+    require-special-char: true
+    prevent-common: true
+    prevent-consecutive: true
+    expiration-days: 90    # 密码过期天数
+    history-size: 5        # 记住历史密码数量
+    max-attempts: 5        # 最大尝试次数
+
+
 # Thymeleaf 配置
 #  thymeleaf：
 #    cache：false # 开发时禁用缓存
@@ -146,6 +178,7 @@ lss:
   minio:
     # MinIO 服务地址
     endpoint: http://localhost:9000   # 本地MinIO 服务地址  MinIO的API端口默认是9000，而Web控制台端口默认是9001
+#    endpoint: https://minio.aioveu.com/api # 必须是API端口
     # 访问凭据
     access-key: minioaioveu
     # 凭据密钥
@@ -262,13 +295,27 @@ servlet:
 #访问 Swagger 接口文档： http://localhost:8989/swagger-ui.html
 #访问 Swagger 接口文档： http://192.168.25.21:8989/swagger-ui.html
 #访问 Swagger 接口文档： http://aioveu.com:8989/swagger-ui.html
+
+#  springdoc-openapi
+#  基于 OpenAPI 3.0 规范
+#  替代原来的 springfox-swagger
+#  自动生成 API 文档
+#  访问路径：/swagger-ui.html
+
+#  knife4j
+#  基于 Swagger 2.x/3.x 增强
+#  中国人开发的，更适合国内开发者
+#  提供更多增强功能
+#  访问路径：/doc.html(如果开启)
+
 springdoc:
+  # 基础配置
   swagger-ui:
-    path: /swagger-ui.html
+    path: /swagger-ui.html    # 原生 Swagger UI
     operations-sorter: alpha
     tags-sorter: alpha
   api-docs:
-    path: /v3/api-docs
+    path: /v3/api-docs          # OpenAPI JSON 端点
   group-configs:
     - group: '系统管理'
       paths-to-match: "/**"
@@ -291,7 +338,45 @@ knife4j:
   # 生产环境配置
   production: false  # 设置为 true 表示在生产环境中不显示文档，为 false 表示显示文档（通常在开发环境中使用）
   setting:
+    # 基础配置-------------
     language: zh_cn
+    enable-version: true
+    # ✅ 开启重载功能
+    enable-reload: true
+    enable-open-api: true
+
+    # 调试和缓存-------------
+    # 启用调试模式
+    enable-debug: true
+    # 启用请求缓存
+    enable-request-cache: true
+    # 自动添加认证头
+    enable-filter-multipart-apimethod: 4
+    # Token 自动管理
+    enable-after-script: true
+
+
+    #显示配置-------------
+    # ✅ 添加这个关键配置
+    enable-swagger-models: true
+    enable-group: true
+    enable-footer: true
+    enable-footer-custom-content: "Aioveu 认证服务"
+    # ✅ 开启文档管理
+    enable-document-manage: true
+
+    # 搜索和国际化-------------
+    enable-search: true
+    enable-i18n: true
+
+    #高级功能-------------
+    # 启用动态参数
+    enable-dynamic-params: true
+    # ✅ 开启文件上传处理
+    enable-filter-multipart-param: true
+
+    # 开启全局参数
+    enable-global-parameters: true
 
 # xxl-job 定时任务配置
 xxl:
