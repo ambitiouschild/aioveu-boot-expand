@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 用户实体
+ *
  */
 @TableName("sys_user")
 @Getter

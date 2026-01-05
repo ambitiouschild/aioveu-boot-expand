@@ -260,6 +260,7 @@ public class NoGenerator {
         // 正确格式化序列号
         return "PRINT"  + dateStr + String.format("%04d", seq);
     }
+
 }
 
 

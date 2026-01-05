@@ -108,50 +108,50 @@ services:
     networks:
       - aioveu-boot
 
-  aioveu-boot:
-    image: aioveu-boot:v1.2.1
-    pull_policy: never  # 关键设置，即使本地已有镜像，Docker Compose 在启动时仍尝试连接远程仓库
-    container_name: v1.2.1-aioveu-boot
-#    restart: unless-stopped # 重启策略：除非手动停止容器，否则自动重启
-    #    build:
-    #      context: .
-    #      dockerfile: Dockerfile
-
-    #    environment:  配置文件设置
-    #      - SPRING_PROFILES_ACTIVE=prod
-    #      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/dbname?useSSL=false
-    #      - SPRING_DATASOURCE_USERNAME=user
-    #      - SPRING_DATASOURCE_PASSWORD=pass
-
-    #方式一：通过环境变量注入配置，Spring Boot 支持直接将 环境变量 映射到配置属性，无需额外代码。只需遵循以下命名规则
-    #    environment:
-    #      - SERVER_PORT=8081
-    #      - DATASOURCE_URL=jdbc:mysql://prod-db:3306/mydb
-    #      - DATASOURCE_USERNAME=admin
-    #      - DATASOURCE_PASSWORD=prod123
-
-#    volumes:
-#      - ./aioveu-boot/config/application.yml:/app/resources/application.yml  # 挂载本地配置目录
-#      - ./aioveu-boot/config/application-dev.yml:/app/resources/application-dev.yml  # 挂载本地配置目录
-#      - ./aioveu-boot/config/application-prod.yml:/app/resources/application-prod.yml  # 挂载本地配置目录
-
-      #五、总结
-      #•环境变量：适合简单配置（如端口、数据库连接信息），尤其是敏感信息，推荐优先使用。
-      #•挂载配置文件：适合复杂配置（如 YAML 结构、多环境配置），需注意文件路径和权限。
-      #•最佳实践：敏感信息（密码、密钥）必须通过环境变量传递，避免写入镜像或配置文件；非敏感配置可根据复杂度选择环境变量或挂载文件。
-      #通过以上方式，可实现镜像与配置解耦，灵活适配不同环境（开发、测试、生产）。
-
-    ports:
-      - 8988:8989
-    networks:
-      - aioveu-boot
-    depends_on:
-      - mysql
+#  aioveu-boot:
+#    image: aioveu-boot:v1.2.1
+#    pull_policy: never  # 关键设置，即使本地已有镜像，Docker Compose 在启动时仍尝试连接远程仓库
+#    container_name: v1.2.1-aioveu-boot
+##    restart: unless-stopped # 重启策略：除非手动停止容器，否则自动重启
+#    #    build:
+#    #      context: .
+#    #      dockerfile: Dockerfile
+#
+#    #    environment:  配置文件设置
+#    #      - SPRING_PROFILES_ACTIVE=prod
+#    #      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/dbname?useSSL=false
+#    #      - SPRING_DATASOURCE_USERNAME=user
+#    #      - SPRING_DATASOURCE_PASSWORD=pass
+#
+#    #方式一：通过环境变量注入配置，Spring Boot 支持直接将 环境变量 映射到配置属性，无需额外代码。只需遵循以下命名规则
+#    #    environment:
+#    #      - SERVER_PORT=8081
+#    #      - DATASOURCE_URL=jdbc:mysql://prod-db:3306/mydb
+#    #      - DATASOURCE_USERNAME=admin
+#    #      - DATASOURCE_PASSWORD=prod123
+#
+##    volumes:
+##      - ./aioveu-boot/config/application.yml:/app/resources/application.yml  # 挂载本地配置目录
+##      - ./aioveu-boot/config/application-dev.yml:/app/resources/application-dev.yml  # 挂载本地配置目录
+##      - ./aioveu-boot/config/application-prod.yml:/app/resources/application-prod.yml  # 挂载本地配置目录
+#
+#      #五、总结
+#      #•环境变量：适合简单配置（如端口、数据库连接信息），尤其是敏感信息，推荐优先使用。
+#      #•挂载配置文件：适合复杂配置（如 YAML 结构、多环境配置），需注意文件路径和权限。
+#      #•最佳实践：敏感信息（密码、密钥）必须通过环境变量传递，避免写入镜像或配置文件；非敏感配置可根据复杂度选择环境变量或挂载文件。
+#      #通过以上方式，可实现镜像与配置解耦，灵活适配不同环境（开发、测试、生产）。
+#
+#    ports:
+#      - 8988:8989
+#    networks:
+#      - aioveu-boot
+#    depends_on:
+#      - mysql
 
   aioveu-boot-2:
-    image: aioveu-boot:v1.3.1
+    image: aioveu-boot:v1.3.2
     pull_policy: never  # 关键设置，即使本地已有镜像，Docker Compose 在启动时仍尝试连接远程仓库
-    container_name: v1.3.1-aioveu-boot
+    container_name: v1.3.2-aioveu-boot
       #    restart: unless-stopped # 重启策略：除非手动停止容器，否则自动重启
       #    build:
       #      context: .
@@ -237,63 +237,63 @@ services:
         #新加载Nginx配置
        # sudo nginx -s reload
 
-  aioveu-nginx-2:
-    image: nginx    #使用的镜像名称
-    container_name: v1.3.1-aioveu-nginx #给容器指定一个名称，方便以后引用。
-    #    restart: unless-stopped
-    volumes:
-      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf        #挂载网站文件
-      - ./nginx/html:/usr/share/nginx/html         #挂载网站文件
-      - ./nginx/logs:/var/log/nginx               #持久化存储日志
-      - ./nginx/ssl:/etc/nginx/ssl                 #挂载SSL证书
-    ports:
-      - 8889:80    #表示将nginx容器的80端口映射到宿主机的80端口。格式为宿主机端口:容器端口
-    networks:
-      - aioveu-boot
-    depends_on:
-      - mysql
-
-  aioveu-nginx-h5:
-    image: nginx    #使用的镜像名称
-    container_name: aioveu-nginx-h5 #给容器指定一个名称，方便以后引用。
-    #    restart: unless-stopped
-    volumes:
-      #      - /mnt/nginx/conf/nginx.conf:/etc/nginx/nginx.conf   #挂载主配置文件
-      #      - /mnt/nginx/html:/usr/share/nginx/html         #挂载网站文件
-      #      - /mnt/nginx/logs:/var/log/nginx/               #持久化存储日志
-      #      - /mnt/nginx/ssl:/etc/nginx/ssl                 #挂载SSL证书
-
-      #      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf   #挂载主配置文件
-      #       #关键修复：明确指定文件挂载
-      #      - type: bind
-      #        source: ./nginx/conf/nginx.conf
-      #        target: /etc/nginx/nginx.conf
-      #        read_only: true
-      #
-      #       #配置文件目录挂载
-      #      - type: bind
-      #        source: ./nginx/conf.d
-      #        target: /etc/nginx/conf.d
-      #        read_only: true
-      #
-      #       #SSL证书目录
-      #      - type: bind
-      #        source: ./nginx/ssl
-      #        target: /etc/nginx/ssl
-      ##        read_only: true
-
-      - ./nginx-h5/conf/nginx.conf:/etc/nginx/nginx.conf        #挂载网站文件
-      - ./nginx-h5/html:/usr/share/nginx/html         #挂载网站文件
-      - ./nginx-h5/logs:/var/log/nginx               #持久化存储日志
-      - ./nginx-h5/ssl:/etc/nginx/ssl                 #挂载SSL证书
-
-      #/usr/share/nginx/html nginx配置文件的html路径要与映射路径一致
-
-    ports:
-      - 9999:80    #表示将nginx容器的80端口映射到宿主机的80端口。格式为宿主机端口:容器端口
-    networks:
-      - aioveu-boot
-    depends_on:
-      - mysql
-      #新加载Nginx配置
-      # sudo nginx -s reload
+#  aioveu-nginx-2:
+#    image: nginx    #使用的镜像名称
+#    container_name: v1.3.1-aioveu-nginx #给容器指定一个名称，方便以后引用。
+#    #    restart: unless-stopped
+#    volumes:
+#      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf        #挂载网站文件
+#      - ./nginx/html:/usr/share/nginx/html         #挂载网站文件
+#      - ./nginx/logs:/var/log/nginx               #持久化存储日志
+#      - ./nginx/ssl:/etc/nginx/ssl                 #挂载SSL证书
+#    ports:
+#      - 8889:80    #表示将nginx容器的80端口映射到宿主机的80端口。格式为宿主机端口:容器端口
+#    networks:
+#      - aioveu-boot
+#    depends_on:
+#      - mysql
+#
+#  aioveu-nginx-h5:
+#    image: nginx    #使用的镜像名称
+#    container_name: aioveu-nginx-h5 #给容器指定一个名称，方便以后引用。
+#    #    restart: unless-stopped
+#    volumes:
+#      #      - /mnt/nginx/conf/nginx.conf:/etc/nginx/nginx.conf   #挂载主配置文件
+#      #      - /mnt/nginx/html:/usr/share/nginx/html         #挂载网站文件
+#      #      - /mnt/nginx/logs:/var/log/nginx/               #持久化存储日志
+#      #      - /mnt/nginx/ssl:/etc/nginx/ssl                 #挂载SSL证书
+#
+#      #      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf   #挂载主配置文件
+#      #       #关键修复：明确指定文件挂载
+#      #      - type: bind
+#      #        source: ./nginx/conf/nginx.conf
+#      #        target: /etc/nginx/nginx.conf
+#      #        read_only: true
+#      #
+#      #       #配置文件目录挂载
+#      #      - type: bind
+#      #        source: ./nginx/conf.d
+#      #        target: /etc/nginx/conf.d
+#      #        read_only: true
+#      #
+#      #       #SSL证书目录
+#      #      - type: bind
+#      #        source: ./nginx/ssl
+#      #        target: /etc/nginx/ssl
+#      ##        read_only: true
+#
+#      - ./nginx-h5/conf/nginx.conf:/etc/nginx/nginx.conf        #挂载网站文件
+#      - ./nginx-h5/html:/usr/share/nginx/html         #挂载网站文件
+#      - ./nginx-h5/logs:/var/log/nginx               #持久化存储日志
+#      - ./nginx-h5/ssl:/etc/nginx/ssl                 #挂载SSL证书
+#
+#      #/usr/share/nginx/html nginx配置文件的html路径要与映射路径一致
+#
+#    ports:
+#      - 9999:80    #表示将nginx容器的80端口映射到宿主机的80端口。格式为宿主机端口:容器端口
+#    networks:
+#      - aioveu-boot
+#    depends_on:
+#      - mysql
+#      #新加载Nginx配置
+#      # sudo nginx -s reload

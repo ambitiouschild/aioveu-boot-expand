@@ -20,7 +20,7 @@ docker images
 
 ```bash
 # 2. 给本地镜像打远程标签（原镜像名:标签 → 远程仓库地址/用户名/镜像名:版本）
-docker tag a38b17703496  crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.3.1
+docker tag 5ef8ebeff9dd  crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.3.2
 ```
 
 ```bash
@@ -37,19 +37,19 @@ docker login --username=可我不敌可爱 crpi-s90cufgtjv4fnw98.cn-shanghai.per
 
 ```bash
 # 4. 推送标签后的镜像
-docker push crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.3.1
+docker push crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.3.2
 
 ```
 
 ```bash
 # 5.本地拉取远程仓库的镜像
-docker pull crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.3.1
+docker pull crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.3.2
 ```
 
 
 ```bash
 # 6.拉取后打短标签
-docker tag crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.3.1 aioveu-boot:v1.3.1
+docker tag crpi-s90cufgtjv4fnw98.cn-shanghai.personal.cr.aliyuncs.com/ambitiouschild/aioveu-boot:v1.3.2 aioveu-boot:v1.3.2
 ```
 
 ```bash

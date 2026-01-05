@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aioveu.boot.JuhaocheRolePermission.mapper.JuhaocheRolePermissionMapper">
+
+    <!-- 获取角色权限关联分页列表 -->
+    <select id="getJuhaocheRolePermissionPage" resultType="com.aioveu.boot.JuhaocheRolePermission.model.vo.JuhaocheRolePermissionVO">
+        SELECT
+                id,
+                role_id,
+                permission_id,
+                create_time,
+                create_user,
+                update_time,
+                update_user,
+                is_del
+        FROM
+            juhaoche_role_permission
+        <where>
+            <if test="queryParams.updateTime != null">
+                AND update_time = #{queryParams.updateTime}
+            </if>
+        </where>
+    </select>
+
+</mapper>

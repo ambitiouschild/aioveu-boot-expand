@@ -11,5 +11,14 @@
     <file url="file://$PROJECT_DIR$/sql/mysql/6.洗衣业务独立系统/32aioveu_boot_20250926-7_add_aioveu_laundry_process_image.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/sql/mysql/6.洗衣业务独立系统/33aioveu_boot_20251011-1_add_aioveu_laundry_ garment_identity.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/sql/mysql/6.洗衣业务独立系统/34aioveu_boot_20251011-2_add_aioveu_laundry_garment_tracking.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/7.聚好车项目/商家账户/1-juhaoche_user.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/7.聚好车项目/商家账户/2-juhaoche_roles.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/7.聚好车项目/商家账户/3-juhaoche_permissions.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/7.聚好车项目/商家账户/4-juhaoche_role_permission.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/7.聚好车项目/商家账户/5-juhaoche_permissions_config.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/7.聚好车项目/商家账户/6-juhaoche_merchant.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/7.聚好车项目/商家账户/7-juhaoche_user_merchant.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/7.聚好车项目/商家账户/8-juhaoche_merchant_user_role.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/mysql/7.聚好车项目/商家账户/9-juhaoche_merchant_staff.sql" dialect="MySQL" />
   </component>
 </project>

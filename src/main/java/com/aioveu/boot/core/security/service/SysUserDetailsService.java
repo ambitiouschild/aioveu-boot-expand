@@ -33,6 +33,8 @@ public class SysUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
+
+            // 调用您的方法获取用户信息
             UserAuthCredentials userAuthCredentials = userService.getAuthCredentialsByUsername(username);
             if (userAuthCredentials == null) {
                 throw new UsernameNotFoundException(username);

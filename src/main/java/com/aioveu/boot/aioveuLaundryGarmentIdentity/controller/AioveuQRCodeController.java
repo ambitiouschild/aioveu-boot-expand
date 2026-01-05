@@ -1,4 +1,4 @@
-package com.aioveu.boot.aioveuCommon.util.AioveuQRCode.controller;
+package com.aioveu.boot.aioveuLaundryGarmentIdentity.controller;
 
 import com.aioveu.boot.aioveuCommon.util.AioveuQRCode.model.QRCodeScanRequest;
 import com.aioveu.boot.aioveuCommon.util.AioveuQRCode.service.AioveuQRCodeService;

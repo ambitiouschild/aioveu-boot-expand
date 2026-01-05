@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -56,11 +57,17 @@ MinioFileService已经实现了文件上传功能，并且包含了MinIO的配�
 
  */
 
-@Component
+/*
+条件注解@ConditionalOnProperty(value = "lss.type", havingValue = "minio")：只有当配置属性lss.type的值为minio时，这个bean才会被创建。
+
+如果配置中没有设置lss.type或者值不是minio，那么这个bean就不会被创建，从而导致Spring容器中找不到AioveuQRCodeService类型的bean。
+ */
+//@Component
 @ConditionalOnProperty(value = "lss.type", havingValue = "minio")
 @RequiredArgsConstructor
 @Data
 @Slf4j
+@Service
 public class AioveuQRCodeMinIOService implements AioveuQRCodeService {
 
     private final MinIOService minioService;

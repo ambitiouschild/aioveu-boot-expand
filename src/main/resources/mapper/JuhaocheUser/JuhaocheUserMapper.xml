@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aioveu.boot.JuhaocheUser.mapper.JuhaocheUserMapper">
+
+    <!-- 获取用户分页列表 -->
+    <select id="getJuhaocheUserPage" resultType="com.aioveu.boot.JuhaocheUser.model.vo.JuhaocheUserVO">
+        SELECT
+                id,
+                user_id,
+                name,
+                password,
+                phone,
+                is_enable,
+                create_time,
+                create_user,
+                update_time,
+                update_user,
+                is_del
+        FROM
+            juhaoche_user
+        <where>
+            <if test="queryParams.name != null and queryParams.name != ''">
+                AND name = #{queryParams.name}
+            </if>
+            <if test="queryParams.password != null and queryParams.password != ''">
+                AND password = #{queryParams.password}
+            </if>
+            <if test="queryParams.phone != null and queryParams.phone != ''">
+                AND phone = #{queryParams.phone}
+            </if>
+            <if test="queryParams.isEnable != null">
+                AND is_enable = #{queryParams.isEnable}
+            </if>
+        </where>
+    </select>
+
+</mapper>

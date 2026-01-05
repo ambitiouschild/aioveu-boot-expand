@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aioveu.boot.JuhaocheMerchantStaff.mapper.JuhaocheMerchantStaffMapper">
+
+    <!-- 获取商户员工信息分页列表 -->
+    <select id="getJuhaocheMerchantStaffPage" resultType="com.aioveu.boot.JuhaocheMerchantStaff.model.vo.JuhaocheMerchantStaffVO">
+        SELECT
+                id,
+                user_id,
+                merchant_id,
+                staff_no,
+                real_name,
+                department,
+                position,
+                work_phone,
+                work_email,
+                entry_date,
+                status,
+                remark,
+                is_enable,
+                create_time,
+                create_user,
+                update_time,
+                update_user,
+                is_del
+        FROM
+            juhaoche_merchant_staff
+        <where>
+        </where>
+    </select>
+
+</mapper>

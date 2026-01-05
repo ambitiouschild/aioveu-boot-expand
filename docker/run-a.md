@@ -52,13 +52,39 @@ ssh root@www.aioveu.com "docker version"
 # 1. 查看云服务器上的本地镜像（找到你要推送的镜像名和标签）
 docker images
 ```
+```bash
+# 7. 部署容器
+docker compose -f ./docker-compose98.yml -p aioveu-boot up -d 
+
+```
 
 
 ```bash
 # 7. 部署容器
 docker compose -f ./docker-compose98.yml -p aioveu-boot up -d --no-recreate
 
+#--no-recreate参数的问题：
+#
+#不重新创建容器：如果容器已经存在，不会重新创建
+#
+#环境变量不更新：容器内的环境变量不会更新
+#
+#配置不生效：修改的环境变量不会应用到运行的容器中
+
 ```
+
+
+```bash
+# 1. 修改 docker-compose98.yml 中的环境变量-------------------------------------------------
+# 2. 重启容器（不重建）
+docker compose -f ./docker-compose98.yml -p aioveu-boot restart minio
+
+# 或者指定服务名
+
+```
+
+
+
 
 ```bash
 # 8. 查看日志

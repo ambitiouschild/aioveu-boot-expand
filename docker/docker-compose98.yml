@@ -70,12 +70,21 @@ services:
       #正确配置MinIO域别名 (Domain Alias)
       #这是MinIO特有的配置需求，需要明确告知MinIO "当通过反向代理访问时，请使用什么域名作为对象的基础URL
       # --- 域名代理关键配置 ---
-      - MINIO_DOMAIN= minio.aioveu.com   #在启动MinIO容器时，添加环境变量  指定域名 或者，如果你使用的是MinIO的配置文件，可以在config.env中设置
-      - MINIO_SERVER_URL= https://minio.aioveu.com       # 对象的外部访问URL
+#      - MINIO_DOMAIN=minio.aioveu.com   #指定MinIO服务的域名  #在启动MinIO容器时，添加环境变量  指定域名 或者，如果你使用的是MinIO的配置文件，可以在config.env中设置
+#      - MINIO_SERVER_URL= https://minio.aioveu.com       # 对象的外部访问URL  对象存储的外部访问URL（API端点）
       - MINIO_ROOT_USER=minioaioveu
       - MINIO_ROOT_PASSWORD=minioaioveu
-      - MINIO_BROWSER_REDIRECT_URL=https://love.aioveu.com  # 重要！
+#      - MINIO_BROWSER_REDIRECT_URL=https://minio.aioveu.com  # 取消注释，设置Web UI重定向   浏览器访问的重定向URL（Web界面）
+      #根据MinIO的文档，控制台（WebUI）是通过API端口（9000）提供的，但是通过浏览器访问时，MinIO会自动重定向到控制台界面。
+      #这两个URL通常是相同的，因为API和控制台通过同一个域名和端口访问。
+      #API和控制台使用相同端口：MinIO通过9000端口同时提供API和控制台服务
+
+
+      #路径配置错误：MinIO控制台不能通过 /webui/路径访问
+      #MinIO控制台访问方式：MinIO控制台应该通过根路径访问，而不是子路径
+
       - MINIO_BROWSER_WS_PATH=/ws/objectManager
+
     volumes:
        # 不再挂载配置文件
 #      - type: bind
@@ -107,7 +116,7 @@ services:
 #      - aioveu-boot
 
   aioveu-boot:
-    image: aioveu-boot:v1.3.1
+    image: aioveu-boot:v1.3.2
     pull_policy: never  # 关键设置，即使本地已有镜像，Docker Compose 在启动时仍尝试连接远程仓库  # 仅使用本地镜像
     container_name: aioveu-boot
     #    build:

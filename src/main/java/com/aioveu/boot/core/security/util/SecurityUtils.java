@@ -6,6 +6,7 @@ import com.aioveu.boot.common.constant.SecurityConstants;
 import com.aioveu.boot.common.constant.SystemConstants;
 import com.aioveu.boot.core.security.model.SysUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
  * @author Ray
  * @since 2021/1/10
  */
+@Slf4j
 public class SecurityUtils {
 
     /**
@@ -32,9 +34,17 @@ public class SecurityUtils {
      * @return Optional<SysUserDetails>
      */
     public static Optional<SysUserDetails> getUser() {
+
+        log.info("获取当前的安全上下文（SecurityContext）中的认证信息（Authentication）");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+
         if (authentication != null) {
+
+            log.info("直接从Authentication对象的getPrincipal()方法获取");
             Object principal = authentication.getPrincipal();
+
+
             if (principal instanceof SysUserDetails) {
                 return Optional.of((SysUserDetails) principal);
             }
@@ -88,16 +98,16 @@ public class SecurityUtils {
      * @return 角色集合
      */
     public static Set<String> getRoles() {
-        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-                .map(Authentication::getAuthorities)
-                .filter(CollectionUtil::isNotEmpty)
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())// 1.获取认证信息
+                .map(Authentication::getAuthorities) //2.提取权限列表
+                .filter(CollectionUtil::isNotEmpty)  //3.过滤非空列表
                 .stream()
-                .flatMap(Collection::stream)
-                .map(GrantedAuthority::getAuthority)
+                .flatMap(Collection::stream) //4.转换为 Stream
+                .map(GrantedAuthority::getAuthority)   //5. 获取权限字符串
                 // 筛选角色,authorities 中的角色都是以 ROLE_ 开头
-                .filter(authority -> authority.startsWith(SecurityConstants.ROLE_PREFIX))
-                .map(authority -> StrUtil.removePrefix(authority, SecurityConstants.ROLE_PREFIX))
-                .collect(Collectors.toSet());
+                .filter(authority -> authority.startsWith(SecurityConstants.ROLE_PREFIX))  //6. 筛选角色权限，只保留以 "ROLE_"开头的权限（这些是角色）
+                .map(authority -> StrUtil.removePrefix(authority, SecurityConstants.ROLE_PREFIX)) //7. 移除角色前缀，使用 Hutool 的 StrUtil.removePrefix()移除 "ROLE_"前缀
+                .collect(Collectors.toSet()); //8. 收集为 Set，使用 Set 自动去重
     }
 
     /**

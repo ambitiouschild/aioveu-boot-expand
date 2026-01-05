@@ -201,13 +201,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public UserAuthCredentials getAuthCredentialsByUsername(String username) {
+        // 1. 从数据库查询用户信息（包含密码）
         UserAuthCredentials userAuthCredentials = this.baseMapper.getAuthCredentialsByUsername(username);
         if (userAuthCredentials != null) {
             Set<String> roles = userAuthCredentials.getRoles();
-            // 获取最大范围的数据权限
+            // 获取最大范围的数据权限 // 2. 获取数据权限范围（与密码验证无关）
             Integer dataScope = roleService.getMaximumDataScope(roles);
             userAuthCredentials.setDataScope(dataScope);
         }
+        // 3. 返回用户信息（不包含密码验证）
         return userAuthCredentials;
     }
 

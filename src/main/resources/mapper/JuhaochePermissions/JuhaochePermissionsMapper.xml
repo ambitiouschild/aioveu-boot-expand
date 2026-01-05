@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aioveu.boot.JuhaochePermissions.mapper.JuhaochePermissionsMapper">
+
+    <!-- 获取权限分页列表 -->
+    <select id="getJuhaochePermissionsPage" resultType="com.aioveu.boot.JuhaochePermissions.model.vo.JuhaochePermissionsVO">
+        SELECT
+                id,
+                permission_id,
+                name,
+                code,
+                description,
+                permission_type,
+                parent_id,
+                is_enable,
+                create_time,
+                create_user,
+                update_time,
+                update_user,
+                is_del
+        FROM
+            juhaoche_permissions
+        <where>
+            <if test="queryParams.name != null and queryParams.name != ''">
+                AND name = #{queryParams.name}
+            </if>
+            <if test="queryParams.code != null and queryParams.code != ''">
+                AND code = #{queryParams.code}
+            </if>
+            <if test="queryParams.permissionType != null and queryParams.permissionType != ''">
+                AND permission_type = #{queryParams.permissionType}
+            </if>
+        </where>
+    </select>
+
+</mapper>

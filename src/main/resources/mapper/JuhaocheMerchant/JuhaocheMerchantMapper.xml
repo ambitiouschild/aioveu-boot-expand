@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aioveu.boot.JuhaocheMerchant.mapper.JuhaocheMerchantMapper">
+
+    <!-- 获取商户主体分页列表 -->
+    <select id="getJuhaocheMerchantPage" resultType="com.aioveu.boot.JuhaocheMerchant.model.vo.JuhaocheMerchantVO">
+        SELECT
+                id,
+                merchant_id,
+                merchant_name,
+                merchant_code,
+                business_license,
+                legal_person,
+                contact_phone,
+                email,
+                province,
+                city,
+                address,
+                industry_type,
+                status,
+                audit_remark,
+                audit_time,
+                audit_user_id,
+                is_enable,
+                create_time,
+                create_user,
+                update_time,
+                update_user,
+                is_del
+        FROM
+            juhaoche_merchant
+        <where>
+        </where>
+    </select>
+
+</mapper>

@@ -166,19 +166,38 @@ public class AuthServiceImpl implements AuthService {
 
     /**
      * 获取验证码
+     * 根据配置生成不同类型的验证码图片，并将验证码文本缓存到Redis中
+     * 用于用户登录、注册等需要人机验证的场景
      *
-     * @return 验证码
+     * @return 验证码信息对象，包含验证码密钥和Base64格式的图片数据
      */
     @Override
     public CaptchaInfo getCaptcha() {
 
+
+        log.info(" ============ 从配置中获取验证码参数 ============");
+
+        log.info("获取验证码类型（CIRCLE-圆圈干扰、GIF-动态图、LINE-线条干扰、SHEAR-扭曲干扰）");
         String captchaType = captchaProperties.getType();
+
+        log.info("获取验证码图片宽度（像素）");
         int width = captchaProperties.getWidth();
+
+        log.info("获取验证码图片高度（像素）");
         int height = captchaProperties.getHeight();
+
+        log.info("获取干扰元素数量（干扰线、干扰点等）");
         int interfereCount = captchaProperties.getInterfereCount();
+
+        log.info("获取验证码字符长度 ");
         int codeLength = captchaProperties.getCode().getLength();
 
+        log.info("============ 创建验证码实例 ============");
+        log.info("声明验证码抽象类引用，用于多态创建具体类型的验证码");
         AbstractCaptcha captcha;
+
+        log.info("根据配置的验证码类型创建对应的验证码实例");
+
         if (CaptchaTypeEnum.CIRCLE.name().equalsIgnoreCase(captchaType)) {
             captcha = CaptchaUtil.createCircleCaptcha(width, height, codeLength, interfereCount);
         } else if (CaptchaTypeEnum.GIF.name().equalsIgnoreCase(captchaType)) {
@@ -190,6 +209,8 @@ public class AuthServiceImpl implements AuthService {
         } else {
             throw new IllegalArgumentException("Invalid captcha type: " + captchaType);
         }
+
+
         captcha.setGenerator(codeGenerator);
         captcha.setTextAlpha(captchaProperties.getTextAlpha());
         captcha.setFont(captchaFont);

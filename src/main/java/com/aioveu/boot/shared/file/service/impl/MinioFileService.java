@@ -139,8 +139,13 @@ public class MinioFileService implements FileService {
                     .build();
             minioClient.putObject(putObjectArgs);
 
+            log.info("文件上传成功: Bucket={}, Object={}",
+                   bucketName, dateFolder + "/" + fileName);
+
             // 返回文件路径
             String fileUrl;
+
+
             // 未配置自定义域名
             if (StrUtil.isBlank(customDomain)) {
                 // 获取文件URL
